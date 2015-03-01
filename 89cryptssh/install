@@ -1,24 +1,24 @@
 #!/bin/bash
-dropbear_bin=/usr/sbin/dropbear
+
+# Commands
+dracut_install hostname ifconfig ip pkill cut awk touch ping sleep dropbear
 
 # dropbear files
-inst $dropbear_bin "/usr/sbin/dropbear"
 inst_dir "/etc/dropbear"
 inst /etc/dracut-cryptssh/dropbear_rsa_host_key "/etc/dropbear/dropbear_rsa_host_key"
+
+# SSH Access files
 inst_dir /root/.ssh
 inst_simple /root/.ssh/authorized_keys "/root/.ssh/authorized_keys"
 inst_simple "${moddir}/passwd" "/etc/passwd"
 inst_simple "${moddir}/shells" "/etc/shells"
-inst_simple "${moddir}/tiocsti" "/sbin/tiocsti"
 inst /etc/shadow
 inst "${moddir}/bash_profile" "/root/.bash_profile"
+
+# Utilities
+inst_simple "${moddir}/tiocsti" "/sbin/tiocsti"
 inst "$moddir/config" /etc/config
 inst "$moddir/exitBreakpoint.sh" /sbin/exitBreakpoint.sh
-
-
-# used to kill dropbear sessions
-inst_hook pre-pivot 10 "$moddir/kill-dropbear.sh"
-dracut_install hostname ifconfig ip pkill cut awk touch ping sleep
 
 # to peek into consoles
 inst /usr/bin/setterm
@@ -26,3 +26,6 @@ inst $moddir/peak_console.sh /sbin/peak_console.sh
 
 # setup hook
 inst_hook pre-mount 10 "$moddir/dropbear-load.sh"
+
+# kill hook
+inst_hook pre-pivot 10 "$moddir/kill-dropbear.sh"
