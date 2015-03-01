@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Prerequis drbd
+dracut_install drbdadm drbdmeta drbdsetup vgchange sleep touch ping cut awk hostname ifconfig ip
+inst /usr/local/drbd/etc/drbd.conf
+inst_dir /usr/local/drbd/var/lock/
+inst_dir /usr/local/drbd/var/run/
+inst /etc/init.d/drbd
+
+inst /etc/resolv.conf
+inst "$moddir/config" /etc/config
+inst $moddir/boot.sh /sbin/boot.sh
+inst "$moddir/exitBreakpoint.sh" /sbin/exitBreakpoint.sh
+inst_simple "${moddir}/tiocsti" "/sbin/tiocsti"
+
+# Execution script
+inst_hook pre-mount 00 "$moddir/enableDrbd.sh"

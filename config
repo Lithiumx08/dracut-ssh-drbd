@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# Sur CentOS 6 les modules sont dans /usr/share/
+# Sur CentOS 7 les modules sont dans /usr/lib/
+DRACUT_MODULE_DIR=/usr/share/dracut/modules.d
+
+# Ajouter les commandes dont vous avez besoin dans le initramfs
+commandsToAdd='df netstat vi'
+
+# Partie reseau requise pour tous les modules
+ip=95.128.77.100
+netmask=255.255.255.0
+gw=95.128.77.1
+hostname=hvx9100.celeo.net
+devName=eth0
+
+# Config DRBD
+ipOther=''  # Ip de l'autre serveur
+ipVirtual=''    # Ip virtuelle des 2 serveurs
+role=master  # master/slave
+ROOT_RESOURCE=r0
+
+# Modules a installer
+# Merci de supprimer ceux dont vous n'avez pas besoin
+# Modules existants : 
+#
+#   89cryptssh      |   90drbd
+#
+modToInstall='89cryptssh 90drbd'
+
+
+# Autoriser l'authentification par mot de passe
+# dans le initramfs (true/false)
+allowPassword=true

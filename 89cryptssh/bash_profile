@@ -1,0 +1,4 @@
+PATH=$PATH:/sbin/:/usr/sbin
+export PS1="initram@\h $ "
+
+alias ll="ls -l"
