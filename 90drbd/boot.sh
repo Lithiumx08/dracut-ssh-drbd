@@ -53,6 +53,14 @@ if [[ ${error} > 0 ]] ; then
     echo "${error} erreurs au boot, procédure annulée"
     exit 666
 fi
+
+if [[ $1 == "noboot" ]] ; then
+    echo "stay on breakpoint"
+    exit 0
+fi
+
+
+
 /sbin/exitBreakpoint.sh
 #/bin/rm -f /dev/root
 #/bin/ln -s /dev/drbd0 /dev/root
