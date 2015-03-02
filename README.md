@@ -24,7 +24,7 @@ Architecture
   |---install.sh            (Install script ; can edit sshkill on this file ; instmods devName here)
   |---uninstall.sh          (Delete all these modules on DRACUT_MODULE_DIR => config)
   |---Makefile              (Only Makefile)
-  |---README.txt            (Maybe you already found it ...)
+  |---README.md             (Maybe you already found it ...)
   |---config                (only config ; initram => /etc/config)
   |
   |---89cryptssh-|---check              (dracut file check)
