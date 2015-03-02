@@ -6,6 +6,7 @@ inst /usr/local/drbd/etc/drbd.conf
 inst_dir /usr/local/drbd/var/lock/
 inst_dir /usr/local/drbd/var/run/
 inst /etc/init.d/drbd
+inst /etc/hosts
 
 inst /etc/resolv.conf
 inst "$moddir/config" /etc/config
