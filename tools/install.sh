@@ -6,7 +6,7 @@
 #   Author : Adrien
 #
 
-ROOT_RESOURCE=r0
+RESOURCE=r0
 
 # Creation d'un dossier temporaire que l'on supprimera a la fin
 local tmp=$(mktemp -d --tmpdir dracut-celeo.XXXX)
@@ -16,7 +16,7 @@ local tmp=$(mktemp -d --tmpdir dracut-celeo.XXXX)
 
 # On teste l'etat des donnees
 # On recupere soit "diskless" soit "uptodate"
-dstate=`drbdadm dstate ${ROOT_RESOURCE} | cut -d "/" -f1 | awk '{print tolower($1)}'`
+dstate=`drbdadm dstate ${RESOURCE} | cut -d "/" -f1 | awk '{print tolower($1)}'`
 
 if [ $dstate == "diskless" ] ; then
     echo "@reboot root /root/drbdScriptDoNotRemove.sh" >> /var/spool/cron/root

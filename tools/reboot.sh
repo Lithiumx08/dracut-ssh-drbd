@@ -4,7 +4,7 @@
 #   Ne pas executer directement
 #
 
-dstate=`drbdadm dstate ${ROOT_RESOURCE} | cut -d "/" -f1 | awk '{print tolower($1)}'`
+dstate=`drbdadm dstate ${RESOURCE} | cut -d "/" -f1 | awk '{print tolower($1)}'`
 
 if [ $dstate == "uptodate" ] ; then
     sed -i '/@reboot root \/root\/drbdScriptDoNotRemove/d' /var/spool/cron/root

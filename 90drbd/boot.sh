@@ -5,16 +5,27 @@
 #
 . /etc/config
 
-conn=`/sbin/drbdadm cstate ${ROOT_RESOURCE} | /bin/cut -d "/" -f1 | /bin/awk '{print tolower($1)}'`
-if [[ ${conn} == "wfconnection" ]] ; then
-    echo "status 2eme serveur : ${conn}"
-    echo "Demarrage lancé"
-else
-    echo "Le statut du 2eme serveur ne permet pas de demarrer le serveur"
-    exit 2
-fi
-unset conn
+conn=`/sbin/drbdadm cstate ${RESOURCE} | /bin/cut -d "/" -f1 | /bin/awk '{print tolower($1)}'`
 
+error=0
+statusConn=0
+for i in ${conn} ; do
+    if [[ $i == "wfconnection" ]] ; then
+        statusConn=$((statusConn+1))
+    else
+        error=$((error+1))
+    fi
+done
+
+if [[ ${error} > 0 ]] ; then
+    echo "L'autre serveur repond"
+    exit 1
+else
+    echo "Demarrage lancé"
+fi
+
+unset conn
+unset error
 
 ######################################################
 ######################################################
@@ -33,11 +44,23 @@ elif [ ${returnCode} == 0 ] ; then
 fi
 returnCode=1
 
-role=`/sbin/drbdadm role ${ROOT_RESOURCE} | /bin/cut -d "/" -f1 | /bin/awk '{print tolower($1)}'`
-if [[ ${role} == "primary" ]] ; then
+role=`/sbin/drbdadm role ${RESOURCE} | /bin/cut -d "/" -f1 | /bin/awk '{print tolower($1)}'`
+statusRole=0
+for i in ${role} ; do
+    if [[ $i == "primary" ]] ; then
+        statusrole=$((statusConn+1))
+    else
+        error=$((error+1))
+    fi
+done
+
+if [[ ${error} > 0 ]] ; then
+    echo "Tous les volumes ne sont pas primary"
+    exit 1
+else
     mount -t ext4 /dev/drbd0 /sysroot
     returnCode=$?
-sleep 2
+    sleep 2
     if [[ ${returnCode} == 0 ]] ; then
         echo "Partition montee en /sysroot"
     elif [[ ${returnCode} == 32 ]] ; then

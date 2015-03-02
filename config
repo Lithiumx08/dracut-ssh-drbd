@@ -18,7 +18,9 @@ devName=eth0
 ipOther=''  # Ip de l'autre serveur
 ipVirtual=''    # Ip virtuelle des 2 serveurs
 role=master  # master/slave
-ROOT_RESOURCE=r0
+RESOURCE=r0
+
+
 
 # Modules a installer
 # Merci de supprimer ceux dont vous n'avez pas besoin

@@ -12,9 +12,6 @@ if [ $TEST -ne 0 ] ; then
     ifconfig ${devName} ${ip} netmask ${netmask}
     hostname ${hostname}
     ip route add default via ${gw}
-else
-    echo "Le reseau est deja accessible"
-    echo "On ne monte pas la carte reseau"
 fi
 
 [ -f /tmp/dropbear.pid ] || {
