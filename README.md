@@ -1,4 +1,4 @@
-# dracut-ssh-drbd
+
 
 Intro
 =====
@@ -63,6 +63,16 @@ Edit config file
 make
 make install
 
+Uninstall
+=========
+
+make uninstall
+
+Delete module dir  for :
+89cryptssh/
+90drbd/
+
+Nothing else
 
 References/Credits
 ==================
