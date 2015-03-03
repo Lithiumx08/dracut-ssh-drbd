@@ -1,0 +1,5 @@
+#!/bin/bash
+
+command -v snmp > /dev/null && \
+exit 0
+exit 1
