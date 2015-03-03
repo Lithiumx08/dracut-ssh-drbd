@@ -1,31 +1,13 @@
 #!/bin/bash
 
 # Commands
-dracut_install hostname ifconfig ip cut awk touch ping sleep snmp
+dracut_install hostname ifconfig ip cut awk touch ping sleep snmpd
 
 # snmp files
 inst_dir "/etc/init.d"
-inst /etc/snmp/snmpd.conf
-
-# SSH Access files
-inst_dir /root/.ssh
-inst_simple /root/.ssh/authorized_keys "/root/.ssh/authorized_keys"
-inst_simple "${moddir}/passwd" "/etc/passwd"
-inst_simple "${moddir}/shells" "/etc/shells"
-inst /etc/shadow
-inst "${moddir}/bash_profile" "/root/.bash_profile"
-
-# Utilities
-inst_simple "${moddir}/tiocsti" "/sbin/tiocsti"
-inst "$moddir/config" /etc/config
-inst "$moddir/exitBreakpoint.sh" /sbin/exitBreakpoint.sh
-
-# to peek into consoles
-inst /usr/bin/setterm
-inst $moddir/peak_console.sh /sbin/peak_console.sh
+inst /etc/snmpd.conf
+inst /etc/init.d/snmpd
 
 # setup hook
-inst_hook pre-mount 10 "$moddir/dropbear-load.sh"
+inst_hook pre-mount 90 "$moddir/snmp-load.sh"
 
-# kill hook
-inst_hook pre-pivot 10 "$moddir/kill-dropbear.sh"
