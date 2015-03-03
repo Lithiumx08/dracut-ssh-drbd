@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NEEDED_COMMANDS="dropbear gcc"
+NEEDED_COMMANDS="dropbear gcc snmpd"
 NEEDED_PACKAGES="dracut-network"
 
 error=0

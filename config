@@ -34,6 +34,6 @@ RESOURCE=r0
 modToInstall='88snmp 89cryptssh 90drbd'
 
 
-# Autoriser l'authentification par mot de passe
+# Autoriser l'authentification par mot de passe en SSH
 # dans le initramfs (true/false)
 allowPassword=true

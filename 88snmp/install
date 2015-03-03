@@ -1,12 +1,14 @@
 #!/bin/bash
 
 # Commands
-dracut_install hostname ifconfig ip cut awk touch ping sleep snmpd
+dracut_install hostname ifconfig ip cut awk touch ping sleep snmpd 
 
 # snmp files
 inst_dir "/etc/init.d"
-inst /etc/snmpd.conf
+inst /etc/snmp/snmpd.conf
 inst /etc/init.d/snmpd
+inst /etc/init.d/functions
+inst_dir /var/lock/subsys
 
 # setup hook
 inst_hook pre-mount 90 "$moddir/snmp-load.sh"
