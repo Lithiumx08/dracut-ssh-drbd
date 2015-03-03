@@ -27,6 +27,13 @@ Architecture
   |---README.md             (Maybe you already found it ...)
   |---config                (only config ; initram => /etc/config)
   |
+  |---88snmp-|---check              (dracut file che
+  .          |---installkernel      (dracut install kernel mods) 
+  .          |---install            (dracut install)
+  .          |---
+  .          |---
+  .          |---
+  |
   |---89cryptssh-|---check              (dracut file check)
   .              |---installkernel      (dracut install kernel mods)
   .              |---install            (dracut install)

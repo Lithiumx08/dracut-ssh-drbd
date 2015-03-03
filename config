@@ -29,8 +29,9 @@ RESOURCE=r0
 # Modules existants : 
 #
 #   89cryptssh      |   90drbd
+#   88snmp          |
 #
-modToInstall='89cryptssh 90drbd'
+modToInstall='88snmp 89cryptssh 90drbd'
 
 
 # Autoriser l'authentification par mot de passe
