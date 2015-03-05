@@ -90,7 +90,7 @@ read -n5 -e user
 if [[ ${user} == "yes" ]] ; then
     echo "dracut_install ${commandsInstall}" >> ${DRACUT_MODULE_DIR}/90drbd/install
     dracut -f /boot/initramfs-`uname -r`.img.install `uname -r`
-    echo "Ajoutez '.install' au fichier initramfs pour obtenir les commandes mkfs dans l'initram"
+    echo "Ajoutez '.install' au fichier initramfs dans grub pour obtenir les commandes mkfs dans l'initram"
 fi
 unset user
 
