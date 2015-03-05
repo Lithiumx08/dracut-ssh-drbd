@@ -14,6 +14,8 @@ Suivant l'OS on doit ajouter un temps entre chaque "exit" pour changer de breakp
 Les cles d'authentification recuperées sont :
 /root/.ssh/authorized_keys      (Edit in 89cryptssh/install)
 
+Tous les modules chargent le reseau si necessaire
+
 Architecture
 ============
 
@@ -28,9 +30,9 @@ Architecture
   |---config                (only config ; initram => /etc/config)
   |
   |---88snmp-|---check              (dracut file che
-  .          |---installkernel      (dracut install kernel mods) 
+  .          |---installkernel      (dracut install kernel mods)
   .          |---install            (dracut install)
-  .          |---
+  .          |---snmp-load.sh       (load snmp daemon)
   .          |---
   .          |---
   |
