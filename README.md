@@ -17,6 +17,13 @@ Les cles d'authentification recuperées sont :
 
 Tous les modules chargent le reseau si necessaire
 
+Pour drbd, vous devez etre capable de l’installer et le faire fonctionner sans intiramfs sur une partition data
+Ce module permet de repliquer la partition systeme via drbd toute la replication se fera en initramfs en secondaire
+puis on le passe en primaire et on demarre le système au besoin
+Certains problèmes peuvent arriver lors du demarrage car ce ne sera pas les fichiers avec les bons ID matériels (udev)
+Il faudra alors probablement supprimer ces fichiers dans /sysroot en initramfs une fois la partition montée, cela resout 
+généralement le problème.
+
 Architecture
 ============
 
@@ -30,7 +37,7 @@ Architecture
   |---README.md             (Maybe you already found it ...)
   |---config                (only config ; initram => /etc/config)
   |
-  |---88snmp-|---check              (dracut file che
+  |---88snmp-|---check              (dracut file check)
   .          |---installkernel      (dracut install kernel mods)
   .          |---install            (dracut install)
   .          |---snmp-load.sh       (load snmp daemon)
@@ -40,7 +47,7 @@ Architecture
   .              |---install            (dracut install)
   .              |---peak_console.sh    (initramfs script /sbin/ ; dump and get physical prompt)
   .              |---dropbear-load.sh   (hook script run SSH access)
-  .              |---killdropbear.sh    (hook script to kill dropbear ; DO NOT EDIT, check /install.sh for changes)
+  .              |---killdropbear.sh    (hook script to kill dropbear ; DO NOT EDIT TAKE CARE WITH KERNEL CRASH)
   .              |---bash_profile       (bash profile for root in initramfs)
   .              |---passwd             (only for root)
   .              |---shells             (only shells file)
@@ -87,6 +94,7 @@ Uninstall
 make uninstall
 
 Delete module dir  for :
+88snmp/
 89cryptssh/
 90drbd/
 
