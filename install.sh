@@ -36,11 +36,20 @@ for i in ${modToInstall} ; do
     fi
 done
 
+#
+# On ne copie pas le hash du password root si la connexion par
+# mot de passe n'est pas autorisée
+#
 if ! ${allowPassword} ; then
-    sed -i /'/etc/shadow'/d ${DRACUT_MODULE_DIR}/89cryptssh/install
+    sed -i /'\/etc\/shadow'/d ${DRACUT_MODULE_DIR}/89cryptssh/install
 fi
+#
+# end of allowPassword
+#
 
+#
 # Creation de l'initramfs
+#
 createNewInitramfs=false
 
 if [ -e /boot/initramfs-`uname -r`.img.bak ] ; then
@@ -56,10 +65,11 @@ else
 fi
 
 echo "Generer le nouveau Initramfs (yes/no) ?"
-read user
+read -n3 -e user
 if [[ ${user} == "yes" ]] ; then
     createNewInitramfs=true
 fi
+unset user
 
 if ${createNewInitramfs} ; then
     echo "Generation du nouveau initramfs"
@@ -67,8 +77,20 @@ if ${createNewInitramfs} ; then
 else
     echo "Initramfs non generé ! Tapez  > dracut -f < pour le generer le moment voulu"
 fi
+#
+# end of initramfs normal
+#
 
-
+#
+# Initramfs pour l'installation de drbd
+#
+initramfsInstall=false
+echo "Generer initramfs pour l'install (yes/no) ?"
+read -n3 -e user
+if [[ ${user} == "yes" ]] ; then
+    echo "dracut_install ${commandsInstall}" >> ${DRACUT_MODULE_DIR}/90drbd/install
+    dracut -f /boot/initramfs-3.14.19-0.img.install 3.14.19-0
+fi
 
 exit 0
 
