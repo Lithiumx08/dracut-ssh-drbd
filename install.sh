@@ -66,7 +66,7 @@ fi
 unset backupExist
 
 echo "Generer le nouveau Initramfs (yes/no) ?"
-read -n3 -e user
+read -n5 -e user
 if [[ ${user} == "yes" ]] ; then
     createNewInitramfs=true
 fi
@@ -86,7 +86,7 @@ fi
 # Initramfs pour l'installation de drbd
 #
 echo "Generer initramfs pour l'install (yes/no) ?"
-read -n3 -e user
+read -n5 -e user
 if [[ ${user} == "yes" ]] ; then
     echo "dracut_install ${commandsInstall}" >> ${DRACUT_MODULE_DIR}/90drbd/install
     dracut -f /boot/initramfs-`uname -r`.img.install `uname -r`
