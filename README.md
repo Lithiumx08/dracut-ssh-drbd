@@ -2,6 +2,7 @@
 
 Intro
 =====
+Attention pour le snmp, le daemon se lance mais il n’a pas été testé
 
 Le script "89cryptssh/peak_console.sh" permet d'afficher la console physique
 Le script "tiocsti" permet d'envoyer des commandes sur la console physique (un exemple est present dans exitBreakpoint.sh)
