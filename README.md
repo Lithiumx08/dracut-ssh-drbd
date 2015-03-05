@@ -34,8 +34,6 @@ Architecture
   .          |---installkernel      (dracut install kernel mods)
   .          |---install            (dracut install)
   .          |---snmp-load.sh       (load snmp daemon)
-  .          |---
-  .          |---
   |
   |---89cryptssh-|---check              (dracut file check)
   .              |---installkernel      (dracut install kernel mods)
@@ -58,20 +56,30 @@ Architecture
 Installation
 ============
 
-Requires : dracut-network gcc dropbear
-
-
-Add to boot cmdline :
-rdbreak=mount
-or
-rd.break=mount
-
-
-Edit config file
-
+Requires : dracut-network gcc dropbear snmpd
 
 make
 make install
+
+Utilisation
+===========
+
+On edite le fichier de configuration
+
+On ajoute a la ligne de boot de grub :
+rdbreak=mount
+or
+rd.break=mount
+Cela varie suivant la version de dracut en fonction.
+Pour CentOS 6 utilisez la 1ere ligne, pour CentOS 7 la 2eme.
+
+Pour sortir du break vous pouvez utiliser :
+/sbin/boot.sh => permet de passer drbd en primaire puis monte le systeme dans sysroot et sort de l’initramfs
+/sbin/exitBreakpoint.sh => sort de l’initramfs, attention vous devez avoir monté votre racine dans /sysroot/ sinon vous ne 
+                            pourez pas sortir de l’initramfs
+Si vous avez accès a la console physique tapez “exit” cela vous fera passer au prochain breakpoint
+Sans console physique vous devez utiliser “tiocsti” pour envoyer des commandes sur la console physique il est donc
+indispensable en SSH
 
 Uninstall
 =========

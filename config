@@ -5,13 +5,18 @@
 DRACUT_MODULE_DIR=/usr/share/dracut/modules.d
 
 # Ajouter les commandes dont vous avez besoin dans le initramfs
+# Les commandes deja ajoutées sont :
+# 88snmp :  snmpd
+# 89cryptSSH : pkill dropbear
+# 90drbd : drbdadm drbdmeta drbdsetup vgchange 
+# Pour les 3 : hostname ifconfig ip cut awk touch ping sleep
 commandsToAdd='df netstat vi'
 
 # Partie reseau requise pour tous les modules
-ip=95.128.77.100
+ip=192.168.0.10
 netmask=255.255.255.0
-gw=95.128.77.1
-hostname=hvx9100.celeo.net
+gw=192.168.0.1
+hostname=mycomputer.mynetwork
 devName=eth0
 
 # Config DRBD
@@ -22,8 +27,6 @@ ipVirtual=''    # Ip virtuelle des 2 serveurs
 role=master  # master/slave
 RESOURCE=r0
 
-
-
 # Modules a installer
 # Merci de supprimer ceux dont vous n'avez pas besoin
 # Modules existants : 
@@ -33,7 +36,7 @@ RESOURCE=r0
 #
 modToInstall='88snmp 89cryptssh 90drbd'
 
-
 # Autoriser l'authentification par mot de passe en SSH
 # dans le initramfs (true/false)
+# Sans mot de passe les clés sont recupérées dans /root/.ssh/authorized_keys (editer dans 89cryptssh/install)
 allowPassword=true
