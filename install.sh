@@ -89,7 +89,7 @@ echo "Generer initramfs pour l'install (yes/no) ?"
 read -n3 -e user
 if [[ ${user} == "yes" ]] ; then
     echo "dracut_install ${commandsInstall}" >> ${DRACUT_MODULE_DIR}/90drbd/install
-    dracut -f /boot/initramfs-3.14.19-0.img.install 3.14.19-0
+    dracut -f /boot/initramfs-`uname -r`.img.install `uname -r`
 fi
 
 exit 0
