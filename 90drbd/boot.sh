@@ -61,6 +61,8 @@ else
     mount -t ext4 /dev/drbd0 /sysroot
     returnCode=$?
     sleep 2
+    /bin/rm -f /dev/root
+    /bin/ln -s /dev/drbd0 /dev/root
     if [[ ${returnCode} == 0 ]] ; then
         echo "Partition montee en /sysroot"
     elif [[ ${returnCode} == 32 ]] ; then
@@ -85,8 +87,6 @@ fi
 
 
 /sbin/exitBreakpoint.sh
-#/bin/rm -f /dev/root
-#/bin/ln -s /dev/drbd0 /dev/root
 #echo "Montage en MOUNT"
 #/bin/df
 #/sbin/tiocsti /dev/console "$(echo -e 'exit\r')" > /dev/null
