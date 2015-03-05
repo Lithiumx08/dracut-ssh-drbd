@@ -36,8 +36,8 @@ for i in ${modToInstall} ; do
     fi
 done
 
-if [[ ${allowPassword} == false]] ; then
-    sed -i /'/etc/passwd'/d ${DRACUT_MODULE_DIR}/89cryptssh/install
+if ! ${allowPassword} ; then
+    sed -i /'/etc/shadow'/d ${DRACUT_MODULE_DIR}/89cryptssh/install
 fi
 
 # Creation de l'initramfs
