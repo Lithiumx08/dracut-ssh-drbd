@@ -58,6 +58,8 @@ Architecture
   .          |---enableDrbd.sh      (hook script enable drbd pre-mount)
   .          |---boot.sh            (initramfs script /sbin/ ; drbd primary and mount on sysroot ; and next ; exitBreakpoint.sh )
   |
+  |---tools-|---install-master.sh   (install script in initramfs for drbd)
+  |         |---install-slave.sh    (install script in initramfs for drbd)
   |____________________________________________________________________________________________________
 
 Installation
