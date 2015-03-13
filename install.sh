@@ -1,7 +1,7 @@
 #!/bin/bash
 
 . config
-. tools/initInstall.sh
+. tools/installInitramfs.sh
 
 # Suppression des dossiers precedemment créés
 for i in ${modToInstall} ; do
@@ -47,52 +47,8 @@ fi
 #
 # end of allowPassword
 #
-
-#
-# Creation de l'initramfs
-#
-createNewInitramfs=false
-
-if [ -e /boot/initramfs-`uname -r`.img.bak ] ; then
-    backupExist=true
-else
-    backupExist=false
-fi
-
-if ! ${backupExist} ; then
-    echo "Aucune sauvegarde de l'initramfs ne semble presente"
-else
-    echo "Une sauvegarde de l'Initramfs est presente"
-fi
-unset backupExist
-
-echo "Generer le nouveau Initramfs (yes/no) ?"
-read -n5 -e user
-if [[ ${user} == "yes" ]] ; then
-    createNewInitramfs=true
-fi
-unset user
-
-if ${createNewInitramfs} ; then
-    echo "Generation du nouveau initramfs"
-    dracut -f
-else
-    echo "Initramfs non generé ! Tapez  > dracut -f < pour le generer le moment voulu"
-fi
-#
-# end of initramfs normal
-#
-
-#
-# Initramfs pour l'installation de drbd
-#
-echo "Generer initramfs pour l'install (yes/no) ?"
-read -n5 -e user
-if [[ ${user} == "yes" ]] ; then
-    needToInstall
-fi
-unset user
-
+initramfsInstall
+initramfsNormal
 exit 0
 
 
