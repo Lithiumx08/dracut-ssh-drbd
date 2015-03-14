@@ -23,11 +23,13 @@ devName=eth0
 
 # Config DRBD
 # Commandes requises pour l'installation des metadatas
-commandsInstall='mkfs mkfs.ext4'
+commandsInstall='resize2fs bc which e2fsck'
 ipOther=''  # Ip de l'autre serveur
 ipVirtual=''    # Ip virtuelle des 2 serveurs
 role=master  # master/slave
 RESOURCE=r0
+# Les disques LVM pour la création des metadatas (resize2fs sur les partitions)
+lvm='/dev/mapper/disk1-root /dev/mapper/disk1-data'
 
 # Modules a installer
 # Merci de supprimer ceux dont vous n'avez pas besoin

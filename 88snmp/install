@@ -13,3 +13,5 @@ inst_dir /var/lock/subsys
 # setup hook
 inst_hook pre-mount 90 "$moddir/snmp-load.sh"
 
+# kill hook
+inst_hook pre-pivot 10 "$moddir/kill-snmp.sh"

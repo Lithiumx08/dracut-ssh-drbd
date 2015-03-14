@@ -33,7 +33,13 @@ unset error
 ######################################################
 ######################################################
 error=0
-/sbin/drbdadm primary r0
+if [[ $1 == "force" ]] ; then {
+    /sbin/drbdadm primary ${RESOURCE} --force
+}
+else {
+    /sbin/drbdadm primary ${RESOURCE}
+}
+fi
 returnCode=$?
 sleep 3
 if [ ! ${returnCode} == 0 ] ; then
@@ -61,6 +67,8 @@ else
     mount -t ext4 /dev/drbd0 /sysroot
     returnCode=$?
     sleep 2
+    sed -i /"HOSTNAME="/d /sysroot/etc/sysconfig/network
+    echo "HOSTNAME=${hostname}" > /sysroot/etc/sysconfig/network
     /bin/rm -f /dev/root
     /bin/ln -s /dev/drbd0 /dev/root
     if [[ ${returnCode} == 0 ]] ; then
