@@ -69,6 +69,7 @@ else
     sleep 2
     sed -i /"HOSTNAME="/d /sysroot/etc/sysconfig/network
     echo "HOSTNAME=${hostname}" > /sysroot/etc/sysconfig/network
+    rm -f /sysroot/etc/udev/rules.d/70-persistent-net.rules
     /bin/rm -f /dev/root
     /bin/ln -s /dev/drbd0 /dev/root
     if [[ ${returnCode} == 0 ]] ; then
