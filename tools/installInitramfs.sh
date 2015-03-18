@@ -50,7 +50,6 @@ function initramfsInstall {
         installDirectory
         cp tools/shrink.sh ${DRACUT_MODULE_DIR}/90drbd/
         echo 'inst "$moddir/shrink.sh" /sbin/shrink.sh' >> ${DRACUT_MODULE_DIR}/90drbd/install
-        sed -i /'drbdadm primary ${RESOURCE} --force'/d ${DRACUT_MODULE_DIR}/90drbd/shrink.sh
         dracut --install "${commandsInstall}" -f /boot/initramfs-`uname -r`.img.install `uname -r`
         echo "Ajoutez '.install' au fichier initramfs (.img) dans grub pour obtenir les commandes necessaires dans l'initram"
     fi

@@ -41,6 +41,7 @@ Architecture
   .          |---installkernel      (dracut install kernel mods)
   .          |---install            (dracut install)
   .          |---snmp-load.sh       (load snmp daemon)
+  .          |---kill-snmp.sh       (kill snmp daemon)
   |
   |---89cryptssh-|---check              (dracut file check)
   .              |---installkernel      (dracut install kernel mods)
@@ -59,7 +60,7 @@ Architecture
   .          |---boot.sh            (initramfs script /sbin/ ; drbd primary and mount on sysroot ; and next ; exitBreakpoint.sh )
   |
   |---tools-|---install-master.sh   (install script in initramfs for drbd)
-  |         |---install-slave.sh    (install script in initramfs for drbd)
+  .         |---install-slave.sh    (install script in initramfs for drbd)
   |____________________________________________________________________________________________________
 
 Installation
