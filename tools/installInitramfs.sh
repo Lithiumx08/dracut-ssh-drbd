@@ -25,7 +25,7 @@ function initramfsNormal {
         if ${createNewInitramfs} ; then
             installDirectory
             echo "Generation du nouveau initramfs"
-            dracut -f
+            ${DRACUT_PREFIX}dracut -f
         fi
     else
         echo "Initramfs non generé ! Tapez  > dracut -f < pour le generer le moment voulu"
@@ -50,7 +50,7 @@ function initramfsInstall {
         installDirectory
         cp tools/shrink.sh ${DRACUT_MODULE_DIR}/90drbd/
         echo 'inst "$moddir/shrink.sh" /sbin/shrink.sh' >> ${DRACUT_MODULE_DIR}/90drbd/install
-        dracut --install "${commandsInstall}" -f /boot/initramfs-`uname -r`.img.install `uname -r`
+        ${DRACUT_PREFIX}dracut --install "${commandsInstall}" -f /boot/initramfs-`uname -r`.img.install `uname -r`
         echo "Ajoutez '.install' au fichier initramfs (.img) dans grub pour obtenir les commandes necessaires dans l'initram"
     fi
     unset user

@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# Les / a la fin sont indispensables au bon fonctionnement du script
+PYTHON_PATHS='/usr/lib/python2.6/ /usr/include/python2.6/'
+
+# On installe les commandes Python
+#dracut_install python python2.6-config python2.6
+
+# Le reste des fichiers a installer sera généré automatiquement grace a $PYTHON_PATHS
+
+# La liste des prochains dossiers a analyser
+nextContent=''
+
+# Liste des fichiers a copier ; ajout des données au fur et a mesure de l'analyse des dossiers
+filesToCopy=''
+
+# Liste des dossiers a créer ; ajout des données au fur et a mesure de l'analyse des dossiers
+dirToCreate=''
+
+# FOnction scannant les dossiers/fichiers présents dans PYTHON_PATHS
+function installRecurs () {
+    # La liste des dossiers a analyser lors de la prochaine boucle
+    local funContent=""
+    # Si le script vient d'etre lancé, on utilise la variable PYTHON_PATHS comme liste de dossiers
+    if [ $1 -eq 0 ] ; then
+        for i in $PYTHON_PATHS ; do
+            # La liste des fichiers/dossiers dans le repertoire analysé
+            local content=`ls -1 $i`
+            for j in $content ; do
+                # Si c'est un fichier on l'ajoute a la liste des fichiers a créer
+                if [ -f $i$j ] ; then 
+                    filesToCopy="$filesToCopy $i$j"
+                # Si c'est un dossier on l'ajoute a la liste des dossiers a analyser par la suite
+                elif [ -d $i$j ] ; then
+                    local funContent="$funContent $i$j/"
+                    echo "$i$j est un dossier"
+                fi
+            done
+        done
+        # On copie la liste des dossiers a analyser dans la variable adéquate
+        nextContent="$funContent"
+    else
+        if [ -z "$nextContent" ] ; then
+            echo "Plus de sous-dossiers a analyser"
+            exit 0
+        fi
+        echo $nextContent
+        for i in $nextContent ; do
+            local content=`ls -1 $i`
+            for j in $content ; do
+                if [ -f $i$j ] ; then 
+                    filesToCopy="$filesToCopy $i$j"
+                elif [ -d $i$j ] ; then
+                    local funContent="$funContent $i$j/"
+                    echo "$i$j est un dossier"
+                fi
+            done
+        done
+        nextContent=''
+        nextContent="$funContent"
+        echo "Passage $1"
+    fi
+    dirToCreate="$dirToCreate $funContent"
+
+}
+
+# On fixe une limite de 10 concernant les sous-dossiers existants
+for i in $(seq 0 10); do
+    if [ $i -lt 10 ] ; then
+        installRecurs $i
+    elif [ $i -eq 10 ] ; then
+        echo "Limite de recursion atteinte"
+        exit 1
+    fi
+
+done
+
+echo $dirToCreate
+
+#echo $filesToCopy

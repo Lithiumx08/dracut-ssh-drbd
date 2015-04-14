@@ -3,6 +3,7 @@
 # Sur CentOS 6 les modules sont dans /usr/share/
 # Sur CentOS 7 les modules sont dans /usr/lib/
 DRACUT_MODULE_DIR=/usr/share/dracut/modules.d
+DRACUT_PREFIX=/usr/bin/
 
 # Ajouter les commandes dont vous avez besoin dans le initramfs
 # Les commandes deja ajoutées sont :
@@ -38,7 +39,7 @@ lvm='/dev/mapper/disk1-root /dev/mapper/disk1-data'
 #   89cryptssh      |   90drbd
 #   88snmp          |
 #
-modToInstall='88snmp 89cryptssh 90drbd'
+modToInstall='88snmp 89cryptssh 90drbd 91python'
 
 # Autoriser l'authentification par mot de passe en SSH
 # dans le initramfs (true/false)
