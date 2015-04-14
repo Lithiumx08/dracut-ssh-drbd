@@ -37,7 +37,7 @@ lvm='/dev/mapper/disk1-root /dev/mapper/disk1-data'
 # Modules existants : 
 #
 #   89cryptssh      |   90drbd
-#   88snmp          |
+#   88snmp          |   91python
 #
 modToInstall='88snmp 89cryptssh 90drbd 91python'
 

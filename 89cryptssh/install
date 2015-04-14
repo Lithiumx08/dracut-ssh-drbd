@@ -12,7 +12,7 @@ inst_dir /root/.ssh
 inst_simple /root/.ssh/authorized_keys "/root/.ssh/authorized_keys"
 inst_simple "${moddir}/passwd" "/etc/passwd"
 inst_simple "${moddir}/shells" "/etc/shells"
-inst /etc/shadow
+inst_simple "/etc/shadow" "/etc/shadow"
 inst "${moddir}/bash_profile" "/root/.bash_profile"
 
 # Utilities

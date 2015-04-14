@@ -7,6 +7,8 @@
 
 . tools/installModulesDir.sh
 
+. tools/installPython.sh
+
 initramfsInstall
 initramfsNormal
 exit 0
