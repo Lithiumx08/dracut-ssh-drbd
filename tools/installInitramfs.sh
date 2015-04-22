@@ -23,7 +23,6 @@ function initramfsNormal {
     read -n5 -e user
     if [[ ${user} == "yes" ]] ; then
         if ${createNewInitramfs} ; then
-            installDirectory
             echo "Generation du nouveau initramfs"
             ${DRACUT_PREFIX}dracut -f
         fi
@@ -47,9 +46,9 @@ function initramfsInstall {
     echo "Generer initramfs pour l'install de drbd (yes/no) ?"
     read -n5 -e user
     if [[ ${user} == "yes" ]] ; then
-        installDirectory
         cp tools/shrink.sh ${DRACUT_MODULE_DIR}/90drbd/
         echo 'inst "$moddir/shrink.sh" /sbin/shrink.sh' >> ${DRACUT_MODULE_DIR}/90drbd/install
+        sed -i /'\/etc\/init.d\/drbd start'/d ${DRACUT_MODULE_DIR}/90drbd/install
         ${DRACUT_PREFIX}dracut --install "${commandsInstall}" -f /boot/initramfs-`uname -r`.img.install `uname -r`
         echo "Ajoutez '.install' au fichier initramfs (.img) dans grub pour obtenir les commandes necessaires dans l'initram"
     fi

@@ -16,16 +16,17 @@ commandsToAdd='df netstat vi'
 # Partie reseau requise pour tous les modules
 # Le nom de la carte reseau est indispensable pour charger les drivers dans le initramfs
 # Le hostname est utile pour drbd, sans ce module il peut etre oublié
-ip=192.168.0.10
+ip_master=192.168.0.10
+ip_slave=192.168.0.10
 netmask=255.255.255.0
 gw=192.168.0.1
-hostname=mycomputer.mynetwork
+hostname_master=mycomputer.mynetwork
+hostname_slave=mycomputer.mynetwork
 devName=eth0
 
 # Config DRBD
 # Commandes requises pour l'installation des metadatas
 commandsInstall='resize2fs bc which e2fsck'
-ipOther=''  # Ip de l'autre serveur
 ipVirtual=''    # Ip virtuelle des 2 serveurs
 role=master  # master/slave
 RESOURCE=r0

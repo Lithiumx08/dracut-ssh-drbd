@@ -1,2 +1,1 @@
 #!/bin/bash
-[ -x /sbin/drbdmeta ] && [ -x /sbin/drbdsetup ] && [ -x /sbin/drbdadm ]

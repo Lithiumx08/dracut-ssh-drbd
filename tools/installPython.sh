@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Limite de sous-dossiers
-limitRecurs=1
+limitRecurs=10
 
 # Les / a la fin sont indispensables au bon fonctionnement du script
 PYTHON_PATHS='/usr/lib/python2.6 /usr/include/python2.6'
@@ -84,11 +84,17 @@ for i in $(seq 1 ${limitRecurs}); do
     installRecurs $i
 done
 
+echo "inst_dir /usr/include/" >> ${DRACUT_MODULE_DIR}/91python/install
+
+for i in $PYTHON_PATHS ; do
+    echo "inst_dir $i" >> ${DRACUT_MODULE_DIR}/91python/install
+done
+
 for i in $dirToCreate ; do
-    echo "inst_dir $i" >> "${DRACUT_MODULE_DIR}/91python/install"
+    echo "inst_dir $i" >> ${DRACUT_MODULE_DIR}/91python/install
 done
 
 for i in $filesToCopy ; do
-    echo "inst $i" >> "${DRACUT_MODULE_DIR}/91python/install"
+    echo "inst_simple $i $i" >> ${DRACUT_MODULE_DIR}/91python/install
 done
 

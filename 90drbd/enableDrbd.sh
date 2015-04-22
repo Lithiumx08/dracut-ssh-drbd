@@ -2,6 +2,24 @@
 
 . /etc/config
 
+case ${role} in
+    master)
+        ip=${ip_master}
+        ;;
+    slave)
+        ip=${ip_slave}
+        ;;
+esac
+
+case ${role} in
+    master)
+        hostname=${hostname_master}
+        ;;
+    slave)
+        hostname=${hostname_slave}
+        ;;
+esac
+
 # Permet d'exporter les chemins dans la console physique
 export PATH=$PATH:/sbin:/usr/sbin
 
