@@ -4,7 +4,7 @@
 
 
 # Permet d'exporter les chemins dans la console physique
-export PATH=$PATH:/sbin:/usr/sbin
+export PATH=$PATH:/sbin:/bin:/usr/bin:/usr/sbin
 
 ping -c5 8.8.8.8 > /dev/null
 TEST=$?

@@ -4,6 +4,12 @@
 #
 # Creation de l'initramfs
 #
+echo "N'oubliez pas de vérifier si les fichiers suivants sont correctement configurés avant génération :"
+echo "- /etc/hosts"
+echo "- /usr/local/drbd/etc/drbd.conf"
+echo "- /etc/init.d/drbd"
+echo "Eventuellement la clé ssh dans /root/.ssh/authorized_keys"
+
 function initramfsNormal {
 
     if [ -e /boot/initramfs-`uname -r`.img.bak ] ; then
@@ -25,24 +31,26 @@ function initramfsNormal {
         if ${createNewInitramfs} ; then
             echo "Generation du nouveau initramfs"
             ${DRACUT_PREFIX}dracut -f
+
+            sed -i s/'role=master'/'role=slave'/ ./config
+            installDirectory
+            ${DRACUT_PREFIX}dracut -f /boot/initramfs-`uname -r`.img.slave `uname -r`
+
+            sed -i s/'role=slave'/'role=master'/ ./config
+            installDirectory
+
+
         fi
     else
         echo "Initramfs non generé ! Tapez  > dracut -f < pour le generer le moment voulu"
     fi
     unset user
-
-
 }
 
 #
 # Initramfs pour l'installation de drbd
 #
 function initramfsInstall {
-    echo "N'oubliez pas de vérifier si les fichiers suivants sont correctement configurés avant génération :"
-    echo "- /etc/hosts"
-    echo "- /usr/local/drbd/etc/drbd.conf"
-    echo "- /etc/init.d/drbd"
-    echo "Eventuellement la clé ssh dans /root/.ssh/authorized_keys"
     echo "Generer initramfs pour l'install de drbd (yes/no) ?"
     read -n5 -e user
     if [[ ${user} == "yes" ]] ; then

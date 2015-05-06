@@ -11,7 +11,7 @@ DRACUT_PREFIX=/usr/bin/
 # 89cryptSSH : pkill dropbear
 # 90drbd : drbdadm drbdmeta drbdsetup vgchange 
 # Pour les 3 : hostname ifconfig ip cut awk touch ping sleep
-commandsToAdd='df netstat vi'
+commandsToAdd='df netstat vi fdisk sfdisk rsync'
 
 # Partie reseau requise pour tous les modules
 # Le nom de la carte reseau est indispensable pour charger les drivers dans le initramfs
@@ -28,7 +28,8 @@ devName=eth0
 # Commandes requises pour l'installation des metadatas
 commandsInstall='resize2fs bc which e2fsck'
 ipVirtual=''    # Ip virtuelle des 2 serveurs
-role=master  # master/slave
+# master / slave
+role=master
 RESOURCE=r0
 # Les disques LVM pour la création des metadatas (resize2fs sur les partitions)
 lvm='/dev/mapper/disk1-root /dev/mapper/disk1-data'
@@ -42,6 +43,8 @@ lvm='/dev/mapper/disk1-root /dev/mapper/disk1-data'
 #
 modToInstall='88snmp 89cryptssh 90drbd 91python'
 
+#
+modToUninstall='88snmp 89cryptssh 90drbd 91python'
 # Autoriser l'authentification par mot de passe en SSH
 # dans le initramfs (true/false)
 # Sans mot de passe les clés sont recupérées dans /root/.ssh/authorized_keys (editer dans 89cryptssh/install)

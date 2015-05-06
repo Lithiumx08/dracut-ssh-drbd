@@ -81,7 +81,6 @@ else
         error=$((error+1))
     fi
 fi
-unset role
 
 if [[ ${error} > 0 ]] ; then
     echo "${error} erreurs au boot, procédure annulée"
@@ -92,8 +91,6 @@ if [[ $1 == "noboot" ]] ; then
     echo "stay on breakpoint"
     exit 0
 fi
-
-
 
 /sbin/exitBreakpoint.sh
 #echo "Montage en MOUNT"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
 # On installe les commandes Python
-dracut_install python python2.6-config python2.6
+dracut_install python python2.6
 
 

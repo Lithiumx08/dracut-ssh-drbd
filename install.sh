@@ -7,6 +7,8 @@
 
 . tools/installModulesDir.sh
 
+. tools/postInstall.sh
+
 ##  ##############  ##############  ##              ##############  ##############
 ##  ##############  ##############  ##              ##############  ##############
 ##  ###`            ##              ##              ##              ##          ##
@@ -18,9 +20,16 @@
 ##  ##############  ##############  ##############  ##############  ##############
 ##  ##############  ##############  ##############  ##############  ##############
 
+#InstallModulesDir
 installDirectory
 
+#InstallInitramfs
 initramfsNormal
+
+#InstallInitramfs
 initramfsInstall
+
+#postInstall
+InstallIpVirtual
 exit 0
 
