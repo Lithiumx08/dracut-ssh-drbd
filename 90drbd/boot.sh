@@ -4,6 +4,7 @@
 #
 #
 . /etc/config
+umount `fdisk -l /dev/sda | grep "/dev" | grep "*" | awk -F' ' '{print $1}'`
 
 conn=`/sbin/drbdadm cstate ${RESOURCE} | /bin/cut -d "/" -f1 | /bin/awk '{print tolower($1)}'`
 
@@ -64,14 +65,14 @@ if [[ ${error} > 0 ]] ; then
     echo "Tous les volumes ne sont pas primary"
     exit 1
 else
-    mount -t ext4 /dev/drbd0 /sysroot
+    mount -t ext4 ${DRBD_ROOT} /sysroot
     returnCode=$?
     sleep 2
     sed -i /"HOSTNAME="/d /sysroot/etc/sysconfig/network
     echo "HOSTNAME=${hostname}" > /sysroot/etc/sysconfig/network
     rm -f /sysroot/etc/udev/rules.d/70-persistent-net.rules
     /bin/rm -f /dev/root
-    /bin/ln -s /dev/drbd0 /dev/root
+    /bin/ln -s ${DRBD_ROOT} /dev/root
     if [[ ${returnCode} == 0 ]] ; then
         echo "Partition montee en /sysroot"
     elif [[ ${returnCode} == 32 ]] ; then
@@ -91,7 +92,6 @@ if [[ $1 == "noboot" ]] ; then
     echo "stay on breakpoint"
     exit 0
 fi
-
 /sbin/exitBreakpoint.sh
 #echo "Montage en MOUNT"
 #/bin/df

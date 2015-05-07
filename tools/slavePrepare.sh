@@ -11,7 +11,10 @@ sshUsername='root'
 echo "Password"
 read -e -s sshPassword
 
-
+#bootPart=`lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="/boot") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`
+#lvmPart=`pvdisplay | grep -i 'pv name' | awk -F' ' '{print $3}'`
+#rootPart=`lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="/") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`
+#swapPart=`lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="[SWAP]") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`
 
 PREFIX='/sbin/'
 

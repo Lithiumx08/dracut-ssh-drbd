@@ -33,3 +33,8 @@ for DEVICE in ${lvm} ; do
 done
 drbdadm create-md ${RESOURCE}
 /etc/init.d/drbd start
+
+drbdadm primary ${RESOURCE} --force
+drbdadm secondary ${RESOURCE}
+
+

@@ -31,6 +31,7 @@ ipVirtual=''    # Ip virtuelle des 2 serveurs
 # master / slave
 role=master
 RESOURCE=r0
+DRBD_ROOT='/dev/drbd0'
 # Les disques LVM pour la création des metadatas (resize2fs sur les partitions)
 lvm='/dev/mapper/disk1-root /dev/mapper/disk1-data'
 

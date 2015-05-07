@@ -96,11 +96,6 @@ Uninstall
 
 make uninstall
 
-Delete module dir  for :
-88snmp/
-89cryptssh/
-90drbd/
-
 Nothing else
 
 References/Credits
