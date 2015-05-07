@@ -38,3 +38,34 @@ drbdadm primary ${RESOURCE} --force
 drbdadm secondary ${RESOURCE}
 
 
+/etc/init.d/drbd stop
+
+vgName=`lvm vgdisplay | grep -i 'VG NAME' | awk '{print $3}'`
+
+sed -i s/'locking_type = 4'/'locking_type = 1'/ /etc/lvm/lvm.conf
+
+lvm vgchange -an ${vgName}
+
+lvm vgexport ${vgName}
+
+lvm vgcfgbackup
+
+rsync -avi --delete /etc/lvm/ /lvmsave/
+
+lvm vgcfgrestore
+
+lvm vgimport ${vgName}
+
+lvm vgchange -ay ${vgName}
+
+/etc/init.d/drbd start
+
+drbdadm primary ${RESOURCE}
+
+mount -t ext4 ${DRBD_ROOT} /sysroot
+
+rsync -avi --delete /lvmsave/ /sysroot/lvmsave/
+
+umount ${DRBD_ROOT}
+
+drbdadm secondary ${RESOURCE}

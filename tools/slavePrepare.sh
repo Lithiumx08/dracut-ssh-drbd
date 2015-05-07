@@ -11,26 +11,29 @@ sshUsername='root'
 echo "Password"
 read -e -s sshPassword
 
-#bootPart=`lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="/boot") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`
-#lvmPart=`pvdisplay | grep -i 'pv name' | awk -F' ' '{print $3}'`
-#rootPart=`lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="/") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`
-#swapPart=`lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="[SWAP]") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`
+bootPart=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="/boot") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`
+bootPart="/dev/$bootPart"
+
+lvmPart=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no pvdisplay | grep -i 'pv name' | awk -F' ' '{print $3}'`
+
+rootPart=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="/") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`
+rootPart="/dev/$rootPart"
+
+swapPart=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="[SWAP]") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`
+swapPart="/dev/$swapPart"
 
 PREFIX='/sbin/'
 
-swapPart=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no ${PREFIX}fdisk -l /dev/sda | grep swap | awk -F' ' '{print $1}'`
-echo $swapPart
+echo "Partition swap => $swapPart"
 
-bootPart=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no ${PREFIX}fdisk -l /dev/sda | grep "/dev" | grep "*" | awk -F' ' '{print $1}'`
-echo $bootPart
+echo "Partition boot => $bootPart"
 
-lvmPart=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no ${PREFIX}fdisk -l /dev/sda | grep "LVM" | awk -F' ' '{print $1}'`
-echo $lvmPart
+echo "Partition LVM => $lvmPart"
 
-#`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no`
-echo "Mode :"
-echo "1 - Normal"
-echo "2 - Initramfs"
+echo "Partition root => $rootPart"
+
+echo "1 - Installation"
+echo "Other Key - Quit"
 read -e mode
 
 case $mode in
@@ -46,13 +49,9 @@ case $mode in
         mkdir /mnt/boot/
         mount -t ext4 $bootPart /mnt/boot/
 
-        sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no mkdir /boot
-        sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no mount -t ext4 ${bootPart} /boot
-
         rsync -av --rsh="sshpass -p $sshPassword ssh -l $sshUsername" ${ipMaster}:/boot/ /mnt/boot/
         cp -f -v /mnt/boot/initramfs-3.14.19-0.img.slave /mnt/boot/initramfs-3.14.19-0.img
 
-        sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no umount /boot
         umount ${bootPart}
 
         echo "Generation du nouveau grub"
@@ -62,24 +61,14 @@ setup (hd0)
 quit
 EOT
 
-
-        ;;
-    2)
         pvUuid=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no ${PREFIX}lvm pvdisplay | grep -i uuid | awk '{print $3}'`
         echo $pvUuid
         vgName=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no ${PREFIX}lvm vgdisplay | grep -i 'VG NAME' | awk '{print $3}'`
         echo $vgName
-
-        sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "sed -i s/'locking_type = 4'/'locking_type = 1'/ /etc/lvm/lvm.conf"
-        sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "${PREFIX}lvm vgchange -an ${vgName}"
-        sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "${PREFIX}lvm vgexport ${vgName}"
-        sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "${PREFIX}lvm vgcfgbackup"
-        rsync -avi --delete --rsh="sshpass -p $sshPassword ssh -l $sshUsername" ${ipMaster}:/etc/lvm/ /etc/lvm/
+        rsync -avi --delete --rsh="sshpass -p $sshPassword ssh -l $sshUsername" ${ipMaster}:/lvmsave/ /etc/lvm/
         pvcreate --uuid $pvUuid --restorefile /etc/lvm/archive/${vgName}_00000* $lvmPart
         vgcfgrestore $vgName
         vgimport $vgName
-        sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "${PREFIX}lvm vgcfgrestore $vgName"
-        sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "${PREFIX}lvm vgimport ${vgName}"
         ;;
     *)
         echo "Bye !"

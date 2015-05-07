@@ -11,7 +11,7 @@ DRACUT_PREFIX=/usr/bin/
 # 89cryptSSH : pkill dropbear
 # 90drbd : drbdadm drbdmeta drbdsetup vgchange 
 # Pour les 3 : hostname ifconfig ip cut awk touch ping sleep
-commandsToAdd='df netstat vi fdisk sfdisk rsync ssh sshpass'
+commandsToAdd='df netstat vi fdisk sfdisk rsync ssh sshpass lsblk'
 
 # Partie reseau requise pour tous les modules
 # Le nom de la carte reseau est indispensable pour charger les drivers dans le initramfs

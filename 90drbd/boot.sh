@@ -28,6 +28,12 @@ fi
 unset conn
 unset error
 
+if [[ $role == "master" ]] ; then
+    hostname=$hostname_master
+else
+    hostname=$hostname_slave
+fi
+
 ######################################################
 ######################################################
 ###          Procédure de demarrage                ###
