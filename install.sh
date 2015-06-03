@@ -30,6 +30,9 @@ initramfsNormal
 initramfsInstall
 
 #postInstall
-InstallIpVirtual
+if [ ! -z ${ipVirtual} ] ; then
+    InstallIpVirtual
+fi
+CheckConfig
 exit 0
 

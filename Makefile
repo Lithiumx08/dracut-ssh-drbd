@@ -19,4 +19,4 @@ clean:
 
 # Desinstallation des modules
 uninstall:
-	./uninstall.sh
+	./tools/uninstall.sh

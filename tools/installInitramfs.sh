@@ -4,8 +4,19 @@
 #
 # Creation de l'initramfs
 #
+
+cat /etc/hosts | grep ${ip_master} > /dev/null
+if [ $? = 1 ] ; then
+    echo "${ip_master}  ${hostname_master}" >> /etc/hosts
+fi
+
+cat /etc/hosts | grep ${ip_slave} > /dev/null
+if [ $? = 1 ] ; then
+    echo "${ip_slave}  ${hostname_slave}" >> /etc/hosts
+fi
+
+
 echo "N'oubliez pas de vérifier si les fichiers suivants sont correctement configurés avant génération :"
-echo "- /etc/hosts"
 echo "- /usr/local/drbd/etc/drbd.conf"
 echo "- /etc/init.d/drbd"
 echo "Eventuellement la clé ssh dans /root/.ssh/authorized_keys"
