@@ -5,6 +5,8 @@
 DRACUT_MODULE_DIR=/usr/share/dracut/modules.d
 DRACUT_PREFIX=/usr/bin/
 
+DRBD_CONFIG='/usr/local/drbd/etc/drbd.conf'
+
 # Ajouter les commandes dont vous avez besoin dans le initramfs
 # Les commandes deja ajoutées sont :
 # 88snmp :  snmpd

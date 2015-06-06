@@ -24,57 +24,19 @@ Certains problèmes peuvent arriver lors du demarrage car ce ne sera pas les fic
 Il faudra alors probablement supprimer ces fichiers dans /sysroot en initramfs une fois la partition montée, cela resout 
 généralement le problème.
 
-Architecture
-============
-
-/-|---tiocsti.c             (tiocsti not compiled)
-  |---tiocsti               (initramfs script /sbin/ ; send cmd to physical prompt ; NOT FOUND BEFORE >MAKE<)
-  |---exitbreakpoint.sh     (initramfs script /sbin/ ; exit from mount breakpoint and load OS)
-  |---checkApp.sh           (Pre-install => check apps and create RSA key)
-  |---install.sh            (Install script ; can edit sshkill on this file ; instmods devName here)
-  |---uninstall.sh          (Delete all these modules on DRACUT_MODULE_DIR => config)
-  |---Makefile              (Only Makefile)
-  |---README.md             (Maybe you already found it ...)
-  |---config                (only config ; initram => /etc/config)
-  |
-  |---88snmp-|---check              (dracut file check)
-  .          |---installkernel      (dracut install kernel mods)
-  .          |---install            (dracut install)
-  .          |---snmp-load.sh       (load snmp daemon)
-  .          |---kill-snmp.sh       (kill snmp daemon)
-  |
-  |---89cryptssh-|---check              (dracut file check)
-  .              |---installkernel      (dracut install kernel mods)
-  .              |---install            (dracut install)
-  .              |---peak_console.sh    (initramfs script /sbin/ ; dump and get physical prompt)
-  .              |---dropbear-load.sh   (hook script run SSH access)
-  .              |---killdropbear.sh    (hook script to kill dropbear ; DO NOT EDIT TAKE CARE WITH KERNEL CRASH)
-  .              |---bash_profile       (bash profile for root in initramfs)
-  .              |---passwd             (only for root)
-  .              |---shells             (only shells file)
-  .
-  |---90drbd-|---check              (dracut file check)
-  .          |---installkernel      (dracut install kernel mods)
-  .          |---install            (dracut install)
-  .          |---enableDrbd.sh      (hook script enable drbd pre-mount)
-  .          |---boot.sh            (initramfs script /sbin/ ; drbd primary and mount on sysroot ; and next ; exitBreakpoint.sh )
-  |
-  |---tools-|---install-master.sh   (install script in initramfs for drbd)
-  .         |---install-slave.sh    (install script in initramfs for drbd)
-  |____________________________________________________________________________________________________
 
 Installation
 ============
 
-Requires : dracut-network gcc dropbear snmpd
+Requires : dracut-network gcc dropbear snmpd sshpass
+
+Edit config File
 
 make
 make install
 
 Utilisation
 ===========
-
-On edite le fichier de configuration
 
 On ajoute a la ligne de boot de grub :
 rdbreak=mount
