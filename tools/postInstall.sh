@@ -36,10 +36,10 @@ function CheckConfig {
             sed -i $(($myLine))i"# DRBD" /etc/sysconfig/iptables
             sed -i $(($myLine+1))i"-A OUTPUT -d ${ip_master}/32 -j ACCEPT" /etc/sysconfig/iptables
             sed -i $(($myLine+2))i"-A OUTPUT -d ${ip_slave}/32 -j ACCEPT" /etc/sysconfig/iptables
-            sed -i $(($myLine+3))i"/n" /etc/sysconfig/iptables
+            sed -i $(($myLine+3))i'\\' /etc/sysconfig/iptables
             sed -i $(($myLine+4))i"-A INPUT -d ${ip_master}/32 -j ACCEPT" /etc/sysconfig/iptables
             sed -i $(($myLine+5))i"-A INPUT -d ${ip_slave}/32 -j ACCEPT" /etc/sysconfig/iptables
-            sed -i $(($myLine+6))i"/n" /etc/sysconfig/iptables
+            sed -i $(($myLine+6))i'\\' /etc/sysconfig/iptables
             unset myLine
         fi
         unset userAnswer
