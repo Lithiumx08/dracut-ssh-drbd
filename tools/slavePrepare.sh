@@ -108,9 +108,7 @@ esac
 lvmPart=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no pvdisplay | grep -i 'pv name' | awk -F' ' '{print $3}'`
 
 pvUuid=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no ${PREFIX}lvm pvdisplay | grep -i uuid | awk '{print $3}'`
-echo ${pvUuid}
 vgName=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no ${PREFIX}lvm vgdisplay | grep -i 'VG NAME' | awk '{print $3}'`
-echo ${vgName}
 rsync -avi --delete --rsh="sshpass -p ${sshPassword} ssh -l ${sshUsername}" ${ipMaster}:/lvmsave/ /etc/lvm/
 pvcreate --uuid ${pvUuid} --restorefile /etc/lvm/archive/${vgName}_00000* ${lvmPart}
 vgcfgrestore ${vgName}
