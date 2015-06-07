@@ -32,7 +32,7 @@ function CheckConfig {
         echo "Ajouter la configuration DRBD automatiquement ? (yes/no)"
         read -e userAnswer
         if [[ ${userAnswer} == 'yes' ]] ; then
-            myLine=`sed -n '/# DNS/=' /etc/sysconfig/iptables | | awk -v ligne=1 'NR== ligne {print $NR}'`
+            myLine=`sed -n '/# DNS/=' /etc/sysconfig/iptables | awk -v ligne=1 'NR== ligne {print $NR}'`
             sed -i $(($myLine))i"# DRBD" /etc/sysconfig/iptables
             sed -i $(($myLine))i"-A OUTPUT -d ${ip_master}/32 -j ACCEPT" /etc/sysconfig/iptables
             sed -i $(($myLine))i"-A OUTPUT -d ${ip_slave}/32 -j ACCEPT" /etc/sysconfig/iptables
