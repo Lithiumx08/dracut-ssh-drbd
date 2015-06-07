@@ -46,10 +46,14 @@ vgchange -a y
 
 # Cas du 1er boot de l'esclave (preparation des metadata)
 diskState=`drbdadm dstate r0 | awk -F'/' '{print $1}' | awk -v ligne=1 'NR==ligne {print $0}'`
-if [[ ${diskState} == 'Diskless' ]] ; then
 
-    /etc/init.d/drbd stop
-    drbdadm create-md ${RESOURCE}
-    /etc/init.d/drbd start
+case ${role} in 
+    slave)
+        case ${diskSate} in
+            Diskless)
 
-fi
+                /etc/init.d/drbd stop
+                drbdadm create-md ${RESOURCE}
+                /etc/init.d/drbd start
+        esac
+esac
