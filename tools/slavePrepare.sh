@@ -35,7 +35,14 @@ echo "Partition LVM => $lvmPart"
 
 echo "Partition root => $rootPart"
 
-echo "1 - Installation"
+bootFirstLine=`cat /boot/grub/menu.lst | grep -o "(hd[0-9],[0-9])" | awk -v ligne=1 ' NR==ligne {print $1}'`
+bootSecondLine="`cat /boot/grub/menu.lst | grep -o "(hd[0-9],[0-9])" | awk -v ligne=1 ' NR==ligne {print $1}' | awk -F',' '{print $1}'`)"
+
+
+
+echo "Indiquer le type de raid utilisé"
+echo "1 - Hardware"
+echo "2 - Software"
 echo "Other Key - Quit"
 read -e raidType
 
@@ -61,8 +68,8 @@ case ${raidType} in
 
         echo "Generation du nouveau grub"
         /sbin/grub --batch <<EOT 1>/dev/null 2>/dev/null
-root (hd0,0)
-setup (hd0)
+root ${bootFirstLine}
+setup ${bootSecondLine}
 quit
 EOT
 
