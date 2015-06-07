@@ -49,11 +49,13 @@ diskState=`drbdadm dstate r0 | awk -F'/' '{print $1}' | awk -v ligne=1 'NR==lign
 
 case ${role} in 
     slave)
-        case ${diskSate} in
+        case ${diskState} in
             Diskless)
 
                 /etc/init.d/drbd stop
                 drbdadm create-md ${RESOURCE}
                 /etc/init.d/drbd start
+                ;;
         esac
+        ;;
 esac
