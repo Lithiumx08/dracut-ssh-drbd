@@ -29,6 +29,20 @@ function CheckConfig {
     cat /etc/sysconfig/iptables | grep DRBD > /dev/null
     if [ $? = 1 ] ; then
         echo "${preEcho} /etc/sysconfig/iptables a verifier pour DRBD"
+        echo "Ajouter la configuration DRBD automatiquement ? (yes/no)"
+        read -e userAnswer
+        if [[ ${userAnswer} == 'yes' ]] ; then
+            myLine=`sed -n '/# DNS/=' /etc/sysconfig/iptables | | awk -v ligne=1 'NR== ligne {print $NR}'`
+            sed -i $(($myLine))i"# DRBD" /etc/sysconfig/iptables
+            sed -i $(($myLine))i"-A OUTPUT -d ${ip_master}/32 -j ACCEPT" /etc/sysconfig/iptables
+            sed -i $(($myLine))i"-A OUTPUT -d ${ip_slave}/32 -j ACCEPT" /etc/sysconfig/iptables
+            sed -i $(($myLine))i"" /etc/sysconfig/iptables
+            sed -i $(($myLine))i"-A INPUT -d ${ip_master}/32 -j ACCEPT" /etc/sysconfig/iptables
+            sed -i $(($myLine))i"-A INPUT -d ${ip_slave}/32 -j ACCEPT" /etc/sysconfig/iptables
+            sed -i $(($myLine))i"" /etc/sysconfig/iptables
+            unset myLine
+        fi
+        unset userAnswer
     fi
 
     cat /etc/fstab | grep UUID > /dev/null
