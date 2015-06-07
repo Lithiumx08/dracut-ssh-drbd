@@ -27,20 +27,10 @@ swapPart=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHo
 swapPart="/dev/${swapPart}"
 
 
-echo "Partition swap => $swapPart"
-
-echo "Partition boot => $bootPart"
-
-echo "Partition LVM => $lvmPart"
-
-echo "Partition root => $rootPart"
-
-
-
-
 echo "Indiquer le type de raid utilisé"
 echo "1 - Hardware"
 echo "2 - Software"
+echo "3 - Software - Suite"
 echo "Other Key - Quit"
 read -e raidType
 
@@ -73,7 +63,39 @@ root ${bootFirstLine}
 setup ${bootSecondLine}
 quit
 EOT
+        ;;
+    2)
+        echo "Copie de la table de partitions"
+        for i in ${listDisk} ; do
+            sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "${PREFIX}sfdisk -d ${i}"  | sfdisk ${i}
+        done
 
+
+        ;;
+    3)
+        echo "Creation des systemes de fichiers"
+        mkfs.ext4 ${bootPart}
+        mkswap ${swapPart}
+
+        echo "Syncro du /boot"
+        mkdir /mnt/boot/
+        mount -t ext4 ${bootPart} /mnt/boot/
+
+        rsync -av --rsh="sshpass -p ${sshPassword} ssh -l ${sshUsername}" ${ipMaster}:/boot/ /mnt/boot/
+        cp -f -v /mnt/boot/initramfs-3.14.19-0.img.slave /mnt/boot/initramfs-3.14.19-0.img
+        
+        bootFirstLine=`cat /mnt/boot/grub/menu.lst | grep -o "(hd[0-9],[0-9])" | awk -v ligne=1 ' NR==ligne {print $1}'`
+        bootSecondLine="`cat /mnt/boot/grub/menu.lst | grep -o "(hd[0-9],[0-9])" | awk -v ligne=1 ' NR==ligne {print $1}' | awk -F',' '{print $1}'`)"
+
+        umount ${bootPart}
+
+        echo "Generation du nouveau grub"
+        /sbin/grub --batch <<EOT 1>/dev/null 2>/dev/null
+root ${bootFirstLine}
+setup ${bootSecondLine}
+quit
+EOT
+    
         ;;
     *)
         echo "Bye !"
