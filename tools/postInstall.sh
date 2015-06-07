@@ -34,12 +34,12 @@ function CheckConfig {
         if [[ ${userAnswer} == 'yes' ]] ; then
             myLine=`sed -n '/# DNS/=' /etc/sysconfig/iptables | awk -v ligne=1 'NR== ligne {print $NR}'`
             sed -i $(($myLine))i"# DRBD" /etc/sysconfig/iptables
-            sed -i $(($myLine))i"-A OUTPUT -d ${ip_master}/32 -j ACCEPT" /etc/sysconfig/iptables
-            sed -i $(($myLine))i"-A OUTPUT -d ${ip_slave}/32 -j ACCEPT" /etc/sysconfig/iptables
-            sed -i $(($myLine))i"" /etc/sysconfig/iptables
-            sed -i $(($myLine))i"-A INPUT -d ${ip_master}/32 -j ACCEPT" /etc/sysconfig/iptables
-            sed -i $(($myLine))i"-A INPUT -d ${ip_slave}/32 -j ACCEPT" /etc/sysconfig/iptables
-            sed -i $(($myLine))i"" /etc/sysconfig/iptables
+            sed -i $(($myLine+1))i"-A OUTPUT -d ${ip_master}/32 -j ACCEPT" /etc/sysconfig/iptables
+            sed -i $(($myLine+2))i"-A OUTPUT -d ${ip_slave}/32 -j ACCEPT" /etc/sysconfig/iptables
+            sed -i $(($myLine+3))i" " /etc/sysconfig/iptables
+            sed -i $(($myLine+4))i"-A INPUT -d ${ip_master}/32 -j ACCEPT" /etc/sysconfig/iptables
+            sed -i $(($myLine+5))i"-A INPUT -d ${ip_slave}/32 -j ACCEPT" /etc/sysconfig/iptables
+            sed -i $(($myLine+6))i" " /etc/sysconfig/iptables
             unset myLine
         fi
         unset userAnswer
