@@ -35,8 +35,6 @@ echo "Partition LVM => $lvmPart"
 
 echo "Partition root => $rootPart"
 
-bootFirstLine=`cat /boot/grub/menu.lst | grep -o "(hd[0-9],[0-9])" | awk -v ligne=1 ' NR==ligne {print $1}'`
-bootSecondLine="`cat /boot/grub/menu.lst | grep -o "(hd[0-9],[0-9])" | awk -v ligne=1 ' NR==ligne {print $1}' | awk -F',' '{print $1}'`)"
 
 
 
@@ -63,6 +61,9 @@ case ${raidType} in
 
         rsync -av --rsh="sshpass -p ${sshPassword} ssh -l ${sshUsername}" ${ipMaster}:/boot/ /mnt/boot/
         cp -f -v /mnt/boot/initramfs-3.14.19-0.img.slave /mnt/boot/initramfs-3.14.19-0.img
+        
+        bootFirstLine=`cat /boot/grub/menu.lst | grep -o "(hd[0-9],[0-9])" | awk -v ligne=1 ' NR==ligne {print $1}'`
+        bootSecondLine="`cat /boot/grub/menu.lst | grep -o "(hd[0-9],[0-9])" | awk -v ligne=1 ' NR==ligne {print $1}' | awk -F',' '{print $1}'`)"
 
         umount ${bootPart}
 
