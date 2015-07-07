@@ -31,8 +31,7 @@ echo "==========================================================================
 echo "Indiquer le type de raid utilisé"
 echo "1 - Hardware"
 echo "2 - Software"
-echo "3 - Software - Test"
-echo "4 - Software - Suite"
+echo "3 - Software - Suite"
 echo "Other Key - Quit"
 read -e raidType
 
@@ -85,8 +84,7 @@ EOT
         for i in ${listDisk} ; do
             sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "${PREFIX}sfdisk -d ${i}"  | sfdisk ${i}
         done
-        ;;
-    3)
+
         partitionFileName='/partitionsToReplicate'
         sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "cat /proc/mdstat | grep ^md[0-9] > ${partitionFileName}"
         rsync -av --rsh="sshpass -p ${sshPassword} ssh -l ${sshUsername}" ${ipMaster}:${partitionFileName} ${partitionFileName}
@@ -109,12 +107,20 @@ EOT
             echo ${deviceNb}
 #            echo "$(echo ${myParts} | wc -w )"
             echo "line for creation :"
-            echo "mdadm --create ${deviceName} --level=${deviceRaid} --raid-devices=${deviceNb} `echo ${deviceParts}`"
+            
+            if [[ ${bootPart} == ${deviceName} ]] ; then
+                echo "mdadm --create ${deviceName} --level=${deviceRaid} --raid-devices=${deviceNb} `echo ${deviceParts}`"
+                mdadm --create ${deviceName} --level=${deviceRaid} --raid-devices=${deviceNb} `echo ${deviceParts}` --metadata=1.0
+            else
+                echo "mdadm --create ${deviceName} --level=${deviceRaid} --raid-devices=${deviceNb} `echo ${deviceParts}`"
+                mdadm --create ${deviceName} --level=${deviceRaid} --raid-devices=${deviceNb} `echo ${deviceParts}` --metadata=1.1
+            fi
+
             echo "=============="
         done < /${partitionFileName}
 
         ;;
-    4)
+    3)
         echo "================================================================================="
         echo "Creation des systemes de fichiers"
         echo "================================================================================="
@@ -135,6 +141,15 @@ EOT
 
         umount ${bootPart}
 
+        lvmPart=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no pvdisplay | grep -i 'pv name' | awk -F' ' '{print $3}'`
+        
+        pvUuid=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no ${PREFIX}lvm pvdisplay | grep -i uuid | awk '{print $3}'`
+        vgName=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no ${PREFIX}lvm vgdisplay | grep -i 'VG NAME' | awk '{print $3}'`
+        rsync -avi --delete --rsh="sshpass -p ${sshPassword} ssh -l ${sshUsername}" ${ipMaster}:/lvmsave/ /etc/lvm/
+        pvcreate --uuid ${pvUuid} --restorefile /etc/lvm/archive/${vgName}_00000* ${lvmPart}
+        vgcfgrestore ${vgName}
+        vgimport ${vgName}
+
         echo "================================================================================="
         echo "Generation du nouveau grub"
         echo "================================================================================="
@@ -143,7 +158,6 @@ root ${bootFirstLine}
 setup ${bootSecondLine}
 quit
 EOT
-        lvmCopy=true
         ;;
     *)
         echo "Bye !"
