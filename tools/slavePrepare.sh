@@ -85,39 +85,51 @@ EOT
             sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "${PREFIX}sfdisk -d ${i}"  | sfdisk ${i}
         done
 
+        # On recupere dans un fichier puis on le supprime:
+        # La liste des partition, des types de raid, et le nom des partitions
         partitionFileName='/partitionsToReplicate'
         sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "cat /proc/mdstat | grep ^md[0-9] > ${partitionFileName}"
         rsync -av --rsh="sshpass -p ${sshPassword} ssh -l ${sshUsername}" ${ipMaster}:${partitionFileName} ${partitionFileName}
         sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no rm -f /${partitionFileName}
 
+        # On recupere la liste des uuid associés a chaque partition dans un fichier, puis on supprime le fichier sur le master
+        sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no "mdadm --detail --scan > /uuidToCheck"
+        rsync -av --rsh="sshpass -p ${sshPassword} ssh -l ${sshUsername}" ${ipMaster}:/uuidToCheck /uuidToCheck
+        sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no rm -f /uuidToCheck
+
+        # On créer l'array tant que le fichier contenant les partitions n'a pas été lu entierement
         while read line ; do
+            # Type de raid a utiliser
             deviceRaid=$(echo ${line} | grep -o raid[0-5] | grep -o [0-9])
+            # Nom de la partition
             deviceName=$(echo "/dev/$(echo ${line} | grep -o md[0-9])")
+            # Partitions utilisées pour l'array
             deviceParts=$(for i in `echo ${line} | grep -o sd[a-z][0-9]` ; do echo "/dev/${i}" ; done)
+            # Nombre de partitions pour le raid (particulierement utile pour les raids 5)
             deviceNb=$(echo ${deviceParts} | wc -w )
-            echo "Partition Name :"
-            echo ${deviceName}
-#            echo "/dev/$(echo ${line} | grep -o md[0-9])"
-            echo "Raid Mode :"
-            echo ${deviceRaid}
-#            echo ${line} | grep -o raid[0-5] | grep -o [0-9]
-            echo "Partitions used :"
-            echo ${deviceParts}
-            echo "Part numbers :"
-            echo ${deviceNb}
-#            echo "$(echo ${myParts} | wc -w )"
-            echo "line for creation :"
-            
+
+            # UUID du raid soft a utiliser
+            # Si l'UUID n'est pas défini, on aura une partition différente utilisée au montage (md127 a la place de md0 par exemple)
+            # Cette erreur génère le mod isci_wait not found lors du chargement de l'initramfs
+            while read lineBis ; do
+                check=`echo ${lineBis} | grep ${deviceName} | awk -F' ' '{print $5}' | awk -F'=' '{print $2}'`
+                if [[ ${check} != '' ]] ; then
+                    deviceUuid=${check}
+                fi
+            done < /uuidToCheck
+
+            # On doit utiliser une version de metadata différente pour la partition de boot, les 2 lignes sont donc legerement différentes
+            # BOOT => 1.0 (attention si on utilise 1 la version utilisée réellement sera 1.2)
+            # LES AUTRES => 1.1 ou 1.2 (par défaut Centos utilise 1.1)
             if [[ ${bootPart} == ${deviceName} ]] ; then
-                echo "mdadm --create ${deviceName} --level=${deviceRaid} --raid-devices=${deviceNb} `echo ${deviceParts}`"
-                mdadm --create ${deviceName} --level=${deviceRaid} --raid-devices=${deviceNb} `echo ${deviceParts}` --metadata=1.0
+                mdadm --create ${deviceName} --level=${deviceRaid} --raid-devices=${deviceNb} `echo ${deviceParts}` --metadata=1.0 -u "${deviceUuid}"
             else
-                echo "mdadm --create ${deviceName} --level=${deviceRaid} --raid-devices=${deviceNb} `echo ${deviceParts}`"
-                mdadm --create ${deviceName} --level=${deviceRaid} --raid-devices=${deviceNb} `echo ${deviceParts}` --metadata=1.1
+                mdadm --create ${deviceName} --level=${deviceRaid} --raid-devices=${deviceNb} `echo ${deviceParts}` --metadata=1.1 -u "${deviceUuid}"
             fi
 
-            echo "=============="
         done < /${partitionFileName}
+
+        mdadm --detail --scan --verbose > /etc/mdadm.conf
 
         ;;
     3)
@@ -141,15 +153,6 @@ EOT
 
         umount ${bootPart}
 
-        lvmPart=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no pvdisplay | grep -i 'pv name' | awk -F' ' '{print $3}'`
-        
-        pvUuid=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no ${PREFIX}lvm pvdisplay | grep -i uuid | awk '{print $3}'`
-        vgName=`sshpass -p "${sshPassword}" ssh ${sshUsername}@${ipMaster} -o StrictHostKeyChecking=no ${PREFIX}lvm vgdisplay | grep -i 'VG NAME' | awk '{print $3}'`
-        rsync -avi --delete --rsh="sshpass -p ${sshPassword} ssh -l ${sshUsername}" ${ipMaster}:/lvmsave/ /etc/lvm/
-        pvcreate --uuid ${pvUuid} --restorefile /etc/lvm/archive/${vgName}_00000* ${lvmPart}
-        vgcfgrestore ${vgName}
-        vgimport ${vgName}
-
         echo "================================================================================="
         echo "Generation du nouveau grub"
         echo "================================================================================="
@@ -158,6 +161,7 @@ root ${bootFirstLine}
 setup ${bootSecondLine}
 quit
 EOT
+        lvmCopy=true
         ;;
     *)
         echo "Bye !"
