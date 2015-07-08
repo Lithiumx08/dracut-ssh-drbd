@@ -3,8 +3,11 @@
 # Sur CentOS 6 les modules sont dans /usr/share/
 # Sur CentOS 7 les modules sont dans /usr/lib/
 DRACUT_MODULE_DIR=/usr/share/dracut/modules.d
-DRACUT_PREFIX=/usr/bin/
 
+# Cette valeure est nulle par défaut, mais peut etre modifiée dans le cadre d'une installation manuelle de dracut
+DRACUT_PREFIX=''
+
+# Fichier de configuration de DRBD
 DRBD_CONFIG='/usr/local/drbd/etc/drbd.conf'
 
 # Ajouter les commandes dont vous avez besoin dans le initramfs
@@ -13,6 +16,7 @@ DRBD_CONFIG='/usr/local/drbd/etc/drbd.conf'
 # 89cryptSSH : pkill dropbear
 # 90drbd : drbdadm drbdmeta drbdsetup vgchange 
 # Pour les 3 : hostname ifconfig ip cut awk touch ping sleep
+# Attention le fait de retirer des commandes peut engendrer des problèmes (a verifier normalement ce ne devrait plus)
 commandsToAdd='df netstat vi fdisk sfdisk rsync ssh sshpass lsblk'
 
 # Partie reseau requise pour tous les modules
@@ -28,12 +32,25 @@ devName=eth0
 
 # Config DRBD
 # Commandes requises pour l'installation des metadatas
+# ON TOUCHE AVEC LES YEUX
+# ou au pire on en ajoute
 commandsInstall='resize2fs bc which e2fsck'
+
+### ATTENTION ###
+# Si l'IP est configurée dans le système veuillez laisser cette variable vide
 ipVirtual=''    # Ip virtuelle des 2 serveurs
+
 # master / slave
+# Le role spécifié sera probablement 'master'
+# Si le role spécifié est slave, vous devez bien vous faire chier car la doc n'est pas lue, ou il y a un bug :(
 role=master
+
+# La ressource utilisée dans le cadre de 2 serveurs sera toujours la meme
 RESOURCE=r0
+
+# Partition DRBD sur laquelle est configurée le systeme "/"
 DRBD_ROOT='/dev/drbd0'
+
 # Les disques LVM pour la création des metadatas (resize2fs sur les partitions)
 lvm='/dev/mapper/disk1-root /dev/mapper/disk1-data'
 
@@ -46,8 +63,10 @@ lvm='/dev/mapper/disk1-root /dev/mapper/disk1-data'
 #
 modToInstall='88snmp 89cryptssh 90drbd 91python'
 
-#
+# Les modules a desintaller
+# Ne rien toucher si vous ne savez pas ce que vous faites
 modToUninstall='88snmp 89cryptssh 90drbd 91python'
+
 # Autoriser l'authentification par mot de passe en SSH
 # dans le initramfs (true/false)
 # Sans mot de passe les clés sont recupérées dans /root/.ssh/authorized_keys (editer dans 89cryptssh/install)

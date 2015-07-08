@@ -37,7 +37,10 @@ function postCopy {
     rsync -av --rsh="sshpass -p ${sshPassword} ssh -l ${sshUsername}" ${ipMaster}:/boot/ /mnt/boot/
     cp -f -v /mnt/boot/initramfs-3.14.19-0.img.slave /mnt/boot/initramfs-3.14.19-0.img
 
+    # Ces infos sont récupérés dans le grub directement comme ca pas d'erreur, le master a la meme chose
+    # du genre hd(0,0)
     bootFirstLine=`cat /mnt/boot/grub/menu.lst | grep -o "(hd[0-9],[0-9])" | awk -v ligne=1 ' NR==ligne {print $1}'`
+    # du genre hd(0)
     bootSecondLine="`cat /mnt/boot/grub/menu.lst | grep -o "(hd[0-9],[0-9])" | awk -v ligne=1 ' NR==ligne {print $1}' | awk -F',' '{print $1}'`)"
 
     umount ${bootPart}

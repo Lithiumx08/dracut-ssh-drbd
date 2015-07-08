@@ -7,7 +7,9 @@ Attention pour le snmp, le daemon se lance mais il n’a pas été testé
 Le script "89cryptssh/peak_console.sh" permet d'afficher la console physique
 Le script "tiocsti" permet d'envoyer des commandes sur la console physique (un exemple est present dans exitBreakpoint.sh)
 
-Suivant l'OS sur lequel on est, il faudra adapter le moment ou tuer l'accès SSH
+Suivant l'OS sur lequel on est, il faudra adapter le moment ou tuer l'accès SSH (kernel panic possible)
+Le tuer trop tot peut engendrer un souci lors de la sortie des breakpoints
+Un accès a la console physique est préférable pour l'experimentation
 Sur certains OS l'accès est tué lors du boot du système, on peut alors supprimer le script (a ajouter dans install.sh)
 
 Suivant l'OS on doit ajouter un temps entre chaque "exit" pour changer de breakpoint, on adapte alors exitBreakPoint.sh
@@ -22,13 +24,15 @@ Ce module permet de repliquer la partition systeme via drbd toute la replication
 puis on le passe en primaire et on demarre le système au besoin
 Certains problèmes peuvent arriver lors du demarrage car ce ne sera pas les fichiers avec les bons ID matériels (udev)
 Il faudra alors probablement supprimer ces fichiers dans /sysroot en initramfs une fois la partition montée, cela resout 
-généralement le problème.
+généralement le problème (la modificatio est a effectuer dans 90drbd/boot.sh).
 
 
 Installation
 ============
 
 Requires : dracut-network gcc dropbear snmpd sshpass
+
+Eviter d'utiliser python pour le moment son installation est degeulasse pour le moment
 
 Edit config File
 
@@ -47,6 +51,7 @@ Pour CentOS 6 utilisez la 1ere ligne, pour CentOS 7 la 2eme.
 
 Pour sortir du break vous pouvez utiliser :
 /sbin/boot.sh => permet de passer drbd en primaire puis monte le systeme dans sysroot et sort de l’initramfs
+/sbin/boot.sh --help pour plus d'infos sur les possibilités du script
 /sbin/exitBreakpoint.sh => sort de l’initramfs, attention vous devez avoir monté votre racine dans /sysroot/ sinon vous ne 
                             pourez pas sortir de l’initramfs
 Si vous avez accès a la console physique tapez “exit” cela vous fera passer au prochain breakpoint

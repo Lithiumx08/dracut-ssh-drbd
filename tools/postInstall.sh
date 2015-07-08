@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Mise en place du service pour l'IP virtuelle uniquement si l'IP est spécifiée dans la configuration
+# La vérification de l'existence de l'IP dans le fichier de config s'effectue lors de l'installation
 function InstallIpVirtual {
 
     serviceFile='/etc/init.d/ipVirtual'
@@ -12,24 +14,30 @@ cat > ${serviceFile} <<EOF
 #
 #
 # chkconfig: - 70 08
-    
+
 EOF
-    
-        echo "ifconfig ${devName}:1 ${ipVirtual}" >> ${serviceFile}
-    
+
+        echo "ifconfig ${devName}:1 ${ipVirtual} netmask ${netmask}" >> ${serviceFile}
+
         chmod +x ${serviceFile}
-    
+
         chkconfig `echo ${serviceFile} | awk -F'/' ' { print $4 }'` on
-    
+
     fi
 }
 
+# Verification de la configuration en vigueur sur le serveur et modification automatique au besoin
+# iptables :
+# Ajout des 2 IP pour autoriser la réplication
+# fstab :
+# Suppression des UUID
+# Ajout des partitions DRBD
 function CheckConfig {
     preEcho="*** Conf Check *** => "
     cat /etc/sysconfig/iptables | grep DRBD > /dev/null
     if [ $? = 1 ] ; then
         echo "${preEcho} /etc/sysconfig/iptables a verifier pour DRBD"
-        echo "Ajouter la configuration DRBD automatiquement ? (yes/no)"
+        echo "!!! Ajouter la configuration DRBD automatiquement ? (yes/no) !!!"
         read -e userAnswer
         if [[ ${userAnswer} == 'yes' ]] ; then
             myLine=`sed -n '/# DNS/=' /etc/sysconfig/iptables | awk -v ligne=1 'NR== ligne {print $NR}'`
@@ -49,7 +57,7 @@ function CheckConfig {
     if [ $? = 0 ] ; then
         echo "${preEcho} Il semble rester des UUID dans le fstab"
         echo "Remplacer les UUID automatiquement ? (yes/no)"
-        echo "Valable uniquement pour /boot et SWAP"
+        echo "!!! Valable uniquement pour /boot et SWAP !!!"
         read -e userAnswer
         if [[ ${userAnswer} == 'yes' ]] ; then
             bootFstab="/dev/`lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="/boot") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`"
@@ -70,7 +78,7 @@ function CheckConfig {
     if [ $? = 1 ] ; then
         echo "${preEcho} Aucune partition DRBD pour ne semble présente dans le fstab"
         echo "Ajouter les partitions DRBD automatiquement ? (yes/no)"
-        echo "Valable uniquement pour une partition / et /home"
+        echo "!!! Valable uniquement pour une partition / et /home !!!"
         read -e userAnswer
         if [[ ${userAnswer} == 'yes' ]] ; then
             cat /etc/fstab | grep '^[#]' | grep mapper > /dev/null

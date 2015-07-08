@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# L'ajout de temps était necessaire dans centos 7 lors des tests effectués
 addtime(){
     if cat /etc/*release* | grep -o "CentOS Linux 7" > /dev/null ; then
         sleep 1

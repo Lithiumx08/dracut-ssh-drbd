@@ -6,7 +6,7 @@ function installDirectory {
         rm -rf ${DESTDIR}${DRACUT_MODULE_DIR}/$i
     done
     
-    # On créé le dossier de modules d'il n'existe pas
+    # On créé le dossier de modules s'il n'existe pas
     mkdir -p ${DESTDIR}${DRACUT_MODULE_DIR}/
     
     # On installe les nouveaux modules
@@ -20,6 +20,7 @@ function installDirectory {
         echo "instmods ${devName}" >> ${DESTDIR}${DRACUT_MODULE_DIR}/$i/installkernel
 
     # Specifications d'installation suivant les modules
+    # L'ajout d'un module et des specifications d'installation est facilité
         case $i in
             89cryptssh)
                 #

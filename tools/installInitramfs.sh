@@ -5,6 +5,8 @@
 # Creation de l'initramfs
 #
 
+# On ajoute les informations requises au bon fonctionnement de DRBD dans le fichier hosts
+# Si cette partie est supprimée, il faut penser a le faire avant installation sinon ce ne fonctionnera pas
 cat /etc/hosts | grep ${ip_master} > /dev/null
 if [ $? = 1 ] ; then
     echo "${ip_master}  ${hostname_master}" >> /etc/hosts
@@ -21,8 +23,11 @@ echo "- /usr/local/drbd/etc/drbd.conf"
 echo "- /etc/init.d/drbd"
 echo "Eventuellement la clé ssh dans /root/.ssh/authorized_keys"
 
+# Installation de l'initramfs de tous les jours
 function initramfsNormal {
 
+    # On vérifie si une sauvegarde de l'initramfs est présente avant toute chose, et on previent l'utilisateur
+    # Libre a lui de stopper l'execution et d'en générer une s'il le souhaite
     if [ -e /boot/initramfs-`uname -r`.img.bak ] ; then
         backupExist=true
     else
@@ -43,13 +48,16 @@ function initramfsNormal {
             echo "Generation du nouveau initramfs"
             ${DRACUT_PREFIX}dracut -f
 
-            sed -i s/'role=master'/'role=slave'/ ./config
-            installDirectory
-            ${DRACUT_PREFIX}dracut -f /boot/initramfs-`uname -r`.img.slave `uname -r`
+            # Si le script est executé sur le MASTER, on prepare automatiquement pour le SLAVE
+            grep "role=master" config 2>&1 > /dev/null
+            if [ $? -eq 0 ] ; then
+                sed -i s/'role=master'/'role=slave'/ ./config
+                installDirectory
+                ${DRACUT_PREFIX}dracut -f /boot/initramfs-`uname -r`.img.slave `uname -r`
 
-            sed -i s/'role=slave'/'role=master'/ ./config
-            installDirectory
-
+                sed -i s/'role=slave'/'role=master'/ ./config
+                installDirectory
+            fi
 
         fi
     else
@@ -61,6 +69,9 @@ function initramfsNormal {
 #
 # Initramfs pour l'installation de drbd
 #
+# Cet initramfs n'est normalement utile que pour le master
+# Au besoin il suffit de copier les lignes 'echo inst ...' 'sed -i ...' et remplacer la ligne 'dracut --install "${commandInstall}"'
+# au dessus pour obtenir le necessaire dans l'initramfs normal
 function initramfsInstall {
     echo "Generer initramfs pour l'install de drbd (yes/no) ?"
     read -n5 -e user
