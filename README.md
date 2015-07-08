@@ -29,6 +29,7 @@ généralement le problème (la modificatio est a effectuer dans 90drbd/boot.sh)
 
 Installation
 ============
+Master :
 
 Requires : dracut-network gcc dropbear snmpd sshpass
 
@@ -38,6 +39,18 @@ Edit config File
 
 make
 make install
+
+Dans /boot/grub/menu.lst on ajoute rdbreak=mount
+On redemarre
+On ajoute .install au fichier initramfam.img (3eme ligne)
+On execute /sbin/shrink.sh
+On execute boot.sh pour demarrer le serveur
+
+Esclave :
+On boot sur l'iso contenant le necessaire (principalement sshpass et rsync)
+On recupere tools/slavePrepare.sh
+On reboot
+
 
 Utilisation
 ===========

@@ -1,13 +1,13 @@
 #!/bin/bash
 PREFIX='/sbin/'
 
-#echo "Ip Master ?"
-#read -e ipMaster
-ipMaster='95.128.77.100'
+echo "Ip Master ?"
+read -e ipMaster
+#ipMaster='95.128.77.100'
 
-#echo "Username ?"
-#read -e sshUsername
-sshUsername='root'
+echo "Username ?"
+read -e sshUsername
+#sshUsername='root'
 
 echo "Password"
 read -e -s sshPassword
