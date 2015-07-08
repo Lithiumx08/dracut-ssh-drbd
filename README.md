@@ -32,7 +32,7 @@ Installation
 
 Requires : dracut-network gcc dropbear snmpd sshpass
 
-Eviter d'utiliser python pour le moment son installation est degeulasse pour le moment
+Eviter d'utiliser python pour le moment son installation est degeulasse
 
 Edit config File
 
