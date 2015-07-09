@@ -3,7 +3,10 @@
 .cmd_ok:
 	./checkApp.sh
 
-build: .cmd_ok tiocsti
+.pythonFiles:
+	./pythonPaths.sh
+
+build: .cmd_ok tiocsti .pythonFiles
 
 # Fichier necessaire pour envoyer des commandes sur la console reelle du serveur et non sur le TTY ouvert en SSH
 tiocsti: tiocsti.c
@@ -15,7 +18,7 @@ install: build
 
 # Nettoyage des donnees créées lors de l'execution de make
 clean:
-	rm tiocsti .cmd_ok
+	rm tiocsti .cmd_ok .pythonFiles
 
 # Desinstallation des modules
 uninstall:

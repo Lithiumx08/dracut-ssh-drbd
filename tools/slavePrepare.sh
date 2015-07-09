@@ -3,11 +3,9 @@ PREFIX='/sbin/'
 
 echo "Ip Master ?"
 read -e ipMaster
-#ipMaster='95.128.77.100'
 
-echo "Username ?"
+echo "Username SSH ?"
 read -e sshUsername
-#sshUsername='root'
 
 echo "Password"
 read -e -s sshPassword

@@ -49,7 +49,7 @@ function installDirectory {
 
                 ;;
             91python)
-                . ./tools/installPython.sh
+                cat .pythonFiles >> ${DRACUT_MODULE_DIR}/$i/install
                 ;;
         esac
 

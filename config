@@ -54,6 +54,10 @@ DRBD_ROOT='/dev/drbd0'
 # Les disques LVM pour la création des metadatas (resize2fs sur les partitions)
 lvm='/dev/mapper/disk1-root /dev/mapper/disk1-data'
 
+# Les paths sont a adapter suivants la version de python, et l'architecture serveur
+# Si python n'est pas installé, la présence des chemins n'est pas génante
+PYTHON_PATHS='/usr/lib/python2.6 /usr/include/python2.6 /usr/lib64/python2.6'
+
 # Modules a installer
 # Merci de supprimer ceux dont vous n'avez pas besoin
 # Modules existants : 
