@@ -40,15 +40,16 @@ Edit config File
 make
 make install
 
-Dans /boot/grub/menu.lst on ajoute rdbreak=mount
+=> Dans /boot/grub/menu.lst on ajoute rdbreak=mount
+
 On redemarre
 On ajoute .install au fichier initramfam.img (3eme ligne)
 On execute /sbin/shrink.sh
-On execute boot.sh pour demarrer le serveur
+On execute /sbin/boot.sh pour demarrer le serveur
 
 Esclave :
 On boot sur l'iso contenant le necessaire (principalement sshpass et rsync)
-On recupere tools/slavePrepare.sh
+On recupere tools/slavePrepare.sh sur le master, et on l'execute
 On reboot
 
 
