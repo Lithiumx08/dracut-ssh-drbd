@@ -5,6 +5,7 @@
 echo $modToInstall | grep 91python 2>&1 > /dev/null
 if [ $? -eq 1 ] ; then 
     touch .pythonFiles
+    exit 0
 fi
 
 # Limite de sous-dossiers
