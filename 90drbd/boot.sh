@@ -4,6 +4,8 @@
 #
 #
 . /etc/config
+
+# Si le /boot est monté => crash kernel
 umount `fdisk -l /dev/sda | grep "/dev" | grep "*" | awk -F' ' '{print $1}'`
 
 conn=`/sbin/drbdadm cstate ${RESOURCE} | /bin/cut -d "/" -f1 | /bin/awk '{print tolower($1)}'`
