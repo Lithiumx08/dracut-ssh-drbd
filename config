@@ -16,7 +16,7 @@ DRBD_CONFIG='/usr/local/drbd/etc/drbd.conf'
 # 89cryptSSH : pkill dropbear
 # 90drbd : drbdadm drbdmeta drbdsetup vgchange fdisk
 # Pour les 3 : hostname ifconfig ip cut awk touch ping sleep
-# Attention le fait de retirer des commandes peut engendrer des problèmes (a verifier normalement ce ne devrait plus)
+# Attention le fait de retirer des commandes peut engendrer des problèmes
 commandsToAdd='df netstat vi sfdisk rsync ssh sshpass lsblk'
 
 # Partie reseau requise pour tous les modules
