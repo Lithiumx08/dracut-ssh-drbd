@@ -79,7 +79,7 @@ else
 
     # Modification du HOSTNAME au demarrage
     sed -i /"HOSTNAME="/d /sysroot/etc/sysconfig/network
-    echo "HOSTNAME=${hostname}" > /sysroot/etc/sysconfig/network
+    echo "HOSTNAME=${hostname}" >> /sysroot/etc/sysconfig/network
 
     # Suppression des rules qui font chier
     rm -f /sysroot/etc/udev/rules.d/70-persistent-net.rules
