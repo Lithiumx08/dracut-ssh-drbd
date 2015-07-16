@@ -14,10 +14,10 @@ DRBD_CONFIG='/usr/local/drbd/etc/drbd.conf'
 # Les commandes deja ajoutées sont :
 # 88snmp :  snmpd
 # 89cryptSSH : pkill dropbear
-# 90drbd : drbdadm drbdmeta drbdsetup vgchange fdisk
+# 90drbd : drbdadm drbdmeta drbdsetup vgchange fdisk rsync wc
 # Pour les 3 : hostname ifconfig ip cut awk touch ping sleep
 # Attention le fait de retirer des commandes peut engendrer des problèmes
-commandsToAdd='df netstat vi sfdisk rsync ssh sshpass lsblk'
+commandsToAdd='df netstat vi sfdisk ssh sshpass lsblk'
 
 # Partie reseau requise pour tous les modules
 # Le nom de la carte reseau est indispensable pour charger les drivers dans le initramfs
