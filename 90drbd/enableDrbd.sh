@@ -14,23 +14,16 @@ if [ $TEST -ne 0 ] ; then
     case ${role} in
         master)
             ip=${ip_master}
-            ;;
-        slave)
-            ip=${ip_slave}
-            ;;
-    esac
-    
-    case ${role} in
-        master)
             hostname=${hostname_master}
             ;;
         slave)
+            ip=${ip_slave}
             hostname=${hostname_slave}
             ;;
     esac
 
     # Configuration reseau du serveur
-    ifconfig down ${devName}
+    ifconfig ${devName} down
     ifconfig ${devName} up
     ifconfig ${devName} ${ip} netmask ${netmask}
     hostname ${hostname}
@@ -41,8 +34,6 @@ unset TEST
 # On active les volumes LVM pour les metadata ou les partitions
 vgchange -a y
 
-# On demarre DRBD
-/etc/init.d/drbd start
 
 # Cas du 1er boot de l'esclave (preparation des metadata)
 diskState=`drbdadm dstate r0 | awk -F'/' '{print $1}' | awk -v ligne=1 'NR==ligne {print $0}'`
@@ -51,11 +42,11 @@ case ${role} in
     slave)
         case ${diskState} in
             Diskless)
-
-                /etc/init.d/drbd stop
                 drbdadm create-md ${RESOURCE}
-                /etc/init.d/drbd start
                 ;;
         esac
         ;;
 esac
+
+# On demarre DRBD
+/etc/init.d/drbd start
