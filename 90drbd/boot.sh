@@ -194,6 +194,7 @@ echo "${@}" | grep "\--no-boot" 2>&1 > /dev/null
 if [ $? -eq 0 ] ; then
     echo "stay on breakpoint"
 else
+    echo "Boot du serveur"
     /sbin/exitBreakpoint.sh
 fi
 
