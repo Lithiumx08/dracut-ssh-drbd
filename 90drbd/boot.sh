@@ -29,8 +29,8 @@ fi
 # Le nombre retourné étant equivalent aux nombre de partitions n'étant pas en primaire
 function IsPrimary {
 
-    error=0
-    role=`/sbin/drbdadm role ${RESOURCE} | /bin/cut -d "/" -f1 | /bin/awk '{print tolower($1)}'`
+    local error=0
+    local role=`/sbin/drbdadm role ${RESOURCE} | /bin/cut -d "/" -f1 | /bin/awk '{print tolower($1)}'`
     for i in ${role} ; do
         if [[ ! $i == "primary" ]] ; then
             error=$((error+1))
@@ -44,9 +44,9 @@ function IsPrimary {
 # Le nombre retourné étant equivalent aux nombre de partitions n'étant pas en primaire
 function IsOtherPrimary {
 
-    error=0
-    role=`/sbin/drbdadm role ${RESOURCE} | /bin/cut -d "/" -f2 | /bin/awk '{print tolower($1)}'`
-    nbLines=`/sbin/drbdadm role ${RESOURCE} | /bin/cut -d "/" -f2 | /bin/awk '{print tolower($1)}' | wc -l`
+    local error=0
+    local role=`/sbin/drbdadm role ${RESOURCE} | /bin/cut -d "/" -f2 | /bin/awk '{print tolower($1)}'`
+    local nbLines=`/sbin/drbdadm role ${RESOURCE} | /bin/cut -d "/" -f2 | /bin/awk '{print tolower($1)}' | wc -l`
     for i in ${role} ; do
         if [[ ! $i == "primary" ]] ; then
             error=$((error+1))
@@ -66,8 +66,8 @@ function IsOtherPrimary {
 # Toute autre valeur correpond a une non reponse de l'autre serveur
 function IsOtherAnswering {
 
-    error=0
-    conn=`/sbin/drbdadm cstate ${RESOURCE} | /bin/cut -d "/" -f1 | /bin/awk '{print tolower($1)}'`
+    local error=0
+    local conn=`/sbin/drbdadm cstate ${RESOURCE} | /bin/cut -d "/" -f1 | /bin/awk '{print tolower($1)}'`
     for i in ${conn} ; do
         if [[ $i == "wfconnection" ]] ; then
             error=$((error+1))

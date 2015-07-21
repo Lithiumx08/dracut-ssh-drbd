@@ -4,7 +4,7 @@
 # La vérification de l'existence de l'IP dans le fichier de config s'effectue lors de l'installation
 function InstallIpVirtual {
 
-    serviceFile='/etc/init.d/ipVirtual'
+    local serviceFile='/etc/init.d/ipVirtual'
 
 
     if [ -n ${serviceFile} ] ; then
@@ -26,6 +26,28 @@ EOF
     fi
 }
 
+function answer {
+    local answer=''
+    local returnValue=''
+    local count=0
+    while [[ $answer != 'yes'  ]] && [[ $answer != 'no'  ]] && [[ $answer != 'n'  ]] && [[ $answer != 'y'  ]] ; do
+        if [ $count -ne 0 ] ; then
+            echo "Please yes/no"
+        fi
+        read -e answer
+        answer=`echo ${answer} | awk '{print tolower($0)}'`
+        count=$(($count+1))
+    done
+    if [[ $answer == 'y'  ]] || [[ $answer == 'yes'  ]] ; then
+        returnValue=0
+    else
+        returnValue=1
+    fi
+    unset answer
+    return $returnValue
+
+}
+
 # Verification de la configuration en vigueur sur le serveur et modification automatique au besoin
 # iptables :
 # Ajout des 2 IP pour autoriser la réplication
@@ -33,14 +55,14 @@ EOF
 # Suppression des UUID
 # Ajout des partitions DRBD
 function CheckConfig {
-    preEcho="*** Conf Check *** => "
+    local preEcho="*** Conf Check *** => "
     cat /etc/sysconfig/iptables | grep DRBD > /dev/null
     if [ $? = 1 ] ; then
         echo "${preEcho} /etc/sysconfig/iptables a verifier pour DRBD"
         echo "!!! Ajouter la configuration DRBD automatiquement ? (yes/no) !!!"
-        read -e userAnswer
-        if [[ ${userAnswer} == 'yes' ]] ; then
-            myLine=`sed -n '/# DNS/=' /etc/sysconfig/iptables | awk -v ligne=1 'NR== ligne {print $NR}'`
+        answer
+        if [ $? -eq 0 ] ; then
+            local myLine=`sed -n '/# DNS/=' /etc/sysconfig/iptables | awk -v ligne=1 'NR== ligne {print $NR}'`
             sed -i $(($myLine))i"# DRBD" /etc/sysconfig/iptables
             sed -i $(($myLine+1))i"-A OUTPUT -d ${ip_master}/32 -j ACCEPT" /etc/sysconfig/iptables
             sed -i $(($myLine+2))i"-A OUTPUT -d ${ip_slave}/32 -j ACCEPT" /etc/sysconfig/iptables
@@ -50,7 +72,6 @@ function CheckConfig {
             sed -i $(($myLine+6))i'\\' /etc/sysconfig/iptables
             unset myLine
         fi
-        unset userAnswer
     fi
 
     cat /etc/fstab | grep UUID > /dev/null
@@ -58,20 +79,19 @@ function CheckConfig {
         echo "${preEcho} Il semble rester des UUID dans le fstab"
         echo "Remplacer les UUID automatiquement ? (yes/no)"
         echo "!!! Valable uniquement pour /boot et SWAP !!!"
-        read -e userAnswer
-        if [[ ${userAnswer} == 'yes' ]] ; then
-            bootFstab="/dev/`lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="/boot") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`"
-            bootUuid=`cat /etc/fstab | grep UUID | awk -F' ' '{if ($2=="/boot") print $1}'`
+        answer
+        if [ $? -eq 0 ] ; then
+            local bootFstab="/dev/`lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="/boot") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`"
+            local bootUuid=`cat /etc/fstab | grep UUID | awk -F' ' '{if ($2=="/boot") print $1}'`
             sed -i "s:${bootUuid}:${bootFstab}:" /etc/fstab
 
-            swappart="/dev/`lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="[SWAP]") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`"
-            swapUuid=`cat /etc/fstab | grep UUID | awk -F' ' '{if ($2=="swap") print $1}'`
-            swapline="${swappart}   none    `cat /etc/fstab | grep UUID | awk -F' ' '{if ($2=="swap") print $3, $4, $5, $6}'`"
+            local swappart="/dev/`lsblk -nl -o name,mountpoint,label | awk -F' ' '{if ($2=="[SWAP]") print $1}'| awk -v ligne=1 ' NR == ligne { print $0}'`"
+            local swapUuid=`cat /etc/fstab | grep UUID | awk -F' ' '{if ($2=="swap") print $1}'`
+            local swapline="${swappart}   none    `cat /etc/fstab | grep UUID | awk -F' ' '{if ($2=="swap") print $3, $4, $5, $6}'`"
             sed -i /$swapUuid/d /etc/fstab
             echo ${swapline} >> /etc/fstab
 
         fi
-        unset userAnswer
     fi
 
     cat /etc/fstab | grep drbd > /dev/null
@@ -79,13 +99,13 @@ function CheckConfig {
         echo "${preEcho} Aucune partition DRBD pour ne semble présente dans le fstab"
         echo "Ajouter les partitions DRBD automatiquement ? (yes/no)"
         echo "!!! Valable uniquement pour une partition / et /home !!!"
-        read -e userAnswer
-        if [[ ${userAnswer} == 'yes' ]] ; then
+        answer
+        if [ $? -eq 0 ] ; then
             cat /etc/fstab | grep '^[#]' | grep mapper > /dev/null
             if [ $? = 1 ] ; then
                 sed -i '/mapper/ s/^/# /' /etc/fstab
             fi
-            drbdParts=`cat ${DRBD_CONFIG} | grep drbd | awk -F' ' '{print $2}' | awk -F';' '{print $1}'`
+            local drbdParts=`cat ${DRBD_CONFIG} | grep drbd | awk -F' ' '{print $2}' | awk -F';' '{print $1}'`
             for i in ${drbdParts} ; do
                 if [[ ${i} == ${DRBD_ROOT} ]] ; then
                     echo "${i}  /   ext4    defaults    0 0" >> /etc/fstab
@@ -95,7 +115,6 @@ function CheckConfig {
 
             done
         fi
-        unset userAnswer
     fi
 
     cat /boot/grub/menu.lst | grep 'break=mount' > /dev/null

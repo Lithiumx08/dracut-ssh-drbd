@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 #
 # Creation de l'initramfs
 #
@@ -29,9 +28,9 @@ function initramfsNormal {
     # On vérifie si une sauvegarde de l'initramfs est présente avant toute chose, et on previent l'utilisateur
     # Libre a lui de stopper l'execution et d'en générer une s'il le souhaite
     if [ -e /boot/initramfs-`uname -r`.img.bak ] ; then
-        backupExist=true
+        local backupExist=true
     else
-        backupExist=false
+        local backupExist=false
     fi
 
     if ! ${backupExist} ; then
@@ -42,8 +41,8 @@ function initramfsNormal {
     unset backupExist
 
     echo "Generer le nouveau Initramfs (yes/no) ?"
-    read -n5 -e user
-    if [[ ${user} == "yes" ]] ; then
+    answer
+    if [ $? -eq 0 ] ; then
         if ${createNewInitramfs} ; then
             echo "Generation du nouveau initramfs"
             ${DRACUT_PREFIX}dracut -f
@@ -63,7 +62,6 @@ function initramfsNormal {
     else
         echo "Initramfs non generé ! Tapez  > dracut -f < pour le generer le moment voulu"
     fi
-    unset user
 }
 
 #
@@ -74,14 +72,13 @@ function initramfsNormal {
 # au dessus pour obtenir le necessaire dans l'initramfs normal
 function initramfsInstall {
     echo "Generer initramfs pour l'install de drbd (yes/no) ?"
-    read -n5 -e user
-    if [[ ${user} == "yes" ]] ; then
+    answer
+    if [ $? -eq 0 ] ; then
         cp tools/shrink.sh ${DRACUT_MODULE_DIR}/90drbd/
         echo 'inst "$moddir/shrink.sh" /sbin/shrink.sh' >> ${DRACUT_MODULE_DIR}/90drbd/install
         sed -i /'\/etc\/init.d\/drbd start'/d ${DRACUT_MODULE_DIR}/90drbd/install
         ${DRACUT_PREFIX}dracut --install "${commandsInstall}" -f /boot/initramfs-`uname -r`.img.install `uname -r`
         echo "Ajoutez '.install' au fichier initramfs (.img) dans grub pour obtenir les commandes necessaires dans l'initram"
     fi
-    unset user
 }
 
