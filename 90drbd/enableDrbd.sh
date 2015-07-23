@@ -9,7 +9,7 @@ export PATH=$PATH:/sbin:/bin:/usr/bin:/usr/sbin
 ping -c5 8.8.8.8 > /dev/null
 TEST=$?
 
-if [ $TEST -ne 0 ] ; then
+if [ ${TEST} -ne 0 ] ; then
 
     case ${role} in
         master)

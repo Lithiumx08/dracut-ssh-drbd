@@ -106,7 +106,7 @@ if [ $? -eq 0 ] ; then
     echo "!!! Answer check desactivé !!!"
 else
     IsOtherAnswering
-    if [[ ${error} == 0 ]] ; then
+    if [[ $? == 0 ]] ; then
         echo "L'autre serveur repond"
         exit 1
     else

@@ -176,37 +176,37 @@ function CheckConfig {
         if [ $? -eq 0 ] ; then
             sed -i "/kernel.*$(uname -r)/ s/$/ rdbreak=mount/" /boot/grub/grub.conf
         fi
+        echo "================================================================================="
     fi
-    echo "================================================================================="
 }
 
 #
 # Installation des répertoires, et des fichiers necessaires
 #
 function InstallDirectory {
+    # On recupere la version de CentOS
+    GetVersion
+    local centosRelease=$?
     # Suppression des dossiers precedemment créés
     for i in ${modToInstall} ; do
-        rm -rf ${DESTDIR}${DRACUT_MODULE_DIR}/${i}
+        rm -rf ${DRACUT_MODULE_DIR}/${i}
     done
     # On créé le dossier de modules s'il n'existe pas
-    mkdir -p ${DESTDIR}${DRACUT_MODULE_DIR}/
+    mkdir -p ${DRACUT_MODULE_DIR}/
     # On installe les nouveaux modules
     for i in ${modToInstall} ; do
-        cp -a ${i} ${DESTDIR}${DRACUT_MODULE_DIR}
-        cp -p ./config ${DESTDIR}${DRACUT_MODULE_DIR}/${i}
-        cp -p ./exitBreakpoint.sh ${DESTDIR}${DRACUT_MODULE_DIR}/${i}
-        cp -p ./tiocsti ${DESTDIR}${DRACUT_MODULE_DIR}/${i}
-        echo "dracut_install ${commandsToAdd}" >> ${DESTDIR}${DRACUT_MODULE_DIR}/${i}/install
+        cp -a ${i} ${DRACUT_MODULE_DIR}
+        cp -p ./config ${DRACUT_MODULE_DIR}/${i}
+        cp -p ./exitBreakpoint.sh ${DRACUT_MODULE_DIR}/${i}
+        cp -p ./tiocsti ${DRACUT_MODULE_DIR}/${i}
+        echo "dracut_install ${commandsToAdd}" >> ${DRACUT_MODULE_DIR}/${i}/install
         echo "${i} installé"
-        echo "instmods ${devName}" >> ${DESTDIR}${DRACUT_MODULE_DIR}/${i}/installkernel
+        echo "instmods ${devName}" >> ${DRACUT_MODULE_DIR}/${i}/installkernel
     # Specifications d'installation suivant les modules
         case ${i} in
             89cryptssh)
                 # Sur CentOS 6 rien a faire, donc le cas n'est pas traité
                 if [[ ${i} == "89cryptssh" ]] ; then
-                    # On recupere la version de CentOS
-                    GetVersion
-                    local centosRelease=$?
                     # Gestion de l'arret de l'accès SSH suivant la version de CentOS
                     # Sur CentOS 7 l'arret se fait automatiquement, on n'execute donc pas le script
                     if [ ${centosRelease} -eq 7 ] ; then
@@ -231,6 +231,15 @@ function InstallDirectory {
                 ;;
         esac
     done
+    # On passe de dash a bash si la config le demande et si on est sur CentOS 6
+    if [[ ${centosRelease} == 6 ]] && ${useBash} ; then
+        if [[ -d ${DRACUT_MODULE_DIR}/00dash/ ]] ; then
+            rm -rf ${DRACUT_MODULE_DIR}/00dash/
+        fi
+        if [[ ! -d ${DRACUT_MODULE_DIR}/00bash/ ]] ; then
+            cp -a 00bash ${DRACUT_MODULE_DIR}
+        fi
+    fi
     echo "================================================================================="
 }
 

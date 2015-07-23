@@ -1,0 +1,6 @@
+#!/bin/bash
+# If another shell is already installed, do not use dash
+[ -x "${initdir}/bin/sh" ] && return
+
+# Prefer dash as /bin/sh if it is available.
+inst /bin/bash && ln -sf bash "${initdir}/bin/sh"

@@ -75,3 +75,7 @@ modToUninstall='88snmp 89cryptssh 90drbd 91python'
 # dans le initramfs (true/false)
 # Sans mot de passe les clés sont recupérées dans /root/.ssh/authorized_keys (editer dans 89cryptssh/install)
 allowPassword=true
+
+# Uniquement utile pour centOS
+# Utiliser Bash plutot que Dash, sur la console phhysique
+useBash=true
