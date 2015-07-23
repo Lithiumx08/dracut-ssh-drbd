@@ -70,6 +70,12 @@ make uninstall
 
 Nothing else
 
+Common Problem
+==============
+
+La configuration fait des siennes apres reinstallation :
+Verifier s'il ne reste pas un dossier de module qui serait inutile pour dracut
+
 References/Credits
 ==================
 This ssh dracut module is inspired by information found at the following URLs:
