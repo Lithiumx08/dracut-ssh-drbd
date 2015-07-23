@@ -4,7 +4,7 @@ Intro
 =====
 Attention pour le snmp, le daemon se lance mais il n’a pas été testé
 
-Le script "89cryptssh/peak_console.sh" permet d'afficher la console physique
+Le script "89dropbear/peak_console.sh" permet d'afficher la console physique
 Le script "tiocsti" permet d'envoyer des commandes sur la console physique (un exemple est present dans exitBreakpoint.sh)
 
 Suivant l'OS sur lequel on est, il faudra adapter le moment ou tuer l'accès SSH (kernel panic possible)
@@ -15,7 +15,7 @@ Sur certains OS l'accès est tué lors du boot du système, on peut alors suppri
 Suivant l'OS on doit ajouter un temps entre chaque "exit" pour changer de breakpoint, on adapte alors exitBreakPoint.sh
 
 Les cles d'authentification recuperées sont :
-/root/.ssh/authorized_keys      (Edit in 89cryptssh/install)
+/root/.ssh/authorized_keys      (Edit in 89dropbear/install)
 
 Tous les modules chargent le reseau si necessaire
 

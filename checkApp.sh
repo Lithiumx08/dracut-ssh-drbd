@@ -14,13 +14,13 @@ for cmd in ${NEEDED_COMMANDS} ; do
     fi
 done
 
-if [[ ! -d /etc/dracut-cryptssh/ ]] ; then
-    mkdir /etc/dracut-cryptssh/
+if [[ ! -d /etc/dracut-dropbear/ ]] ; then
+    mkdir /etc/dracut-dropbear/
 fi
 
-if [[ ! -e /etc/dracut-cryptssh/dropbear_rsa_host_key ]] ; then
+if [[ ! -e /etc/dracut-dropbear/dropbear_rsa_host_key ]] ; then
     if command -v ${dropbearkey} $> /dev/null ; then
-        dropbearkey -t rsa -s 3072 -f /etc/dracut-cryptssh/dropbear_rsa_host_key
+        dropbearkey -t rsa -s 3072 -f /etc/dracut-dropbear/dropbear_rsa_host_key
         echo "Cle RSA OK"	
     else 
         echo "Cle RSA non installee"

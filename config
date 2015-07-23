@@ -13,7 +13,7 @@ DRBD_CONFIG='/usr/local/drbd/etc/drbd.conf'
 # Ajouter les commandes dont vous avez besoin dans le initramfs
 # Les commandes deja ajoutées sont :
 # 88snmp :  snmpd
-# 89cryptSSH : pkill dropbear
+# 89dropbear : pkill dropbear
 # 90drbd : drbdadm drbdmeta drbdsetup vgchange fdisk rsync wc
 # Pour les 3 : hostname ifconfig ip cut awk touch ping sleep
 # Attention le fait de retirer des commandes peut engendrer des problèmes
@@ -62,18 +62,18 @@ PYTHON_PATHS='/usr/lib/python2.6 /usr/include/python2.6 /usr/lib64/python2.6'
 # Merci de supprimer ceux dont vous n'avez pas besoin
 # Modules existants : 
 #
-#   89cryptssh      |   90drbd
+#   89dropbear      |   90drbd
 #   88snmp          |   91python
 #
-modToInstall='88snmp 89cryptssh 90drbd 91python'
+modToInstall='88snmp 89dropbear 90drbd 91python'
 
 # Les modules a desintaller
 # Ne rien toucher si vous ne savez pas ce que vous faites
-modToUninstall='88snmp 89cryptssh 90drbd 91python'
+modToUninstall='88snmp 89dropbear 90drbd 91python'
 
 # Autoriser l'authentification par mot de passe en SSH
 # dans le initramfs (true/false)
-# Sans mot de passe les clés sont recupérées dans /root/.ssh/authorized_keys (editer dans 89cryptssh/install)
+# Sans mot de passe les clés sont recupérées dans /root/.ssh/authorized_keys (editer dans 89dropbear/install)
 allowPassword=true
 
 # Uniquement utile pour centOS

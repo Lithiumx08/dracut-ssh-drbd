@@ -204,9 +204,9 @@ function InstallDirectory {
         echo "instmods ${devName}" >> ${DRACUT_MODULE_DIR}/${i}/installkernel
     # Specifications d'installation suivant les modules
         case ${i} in
-            89cryptssh)
+            89dropbear)
                 # Sur CentOS 6 rien a faire, donc le cas n'est pas traité
-                if [[ ${i} == "89cryptssh" ]] ; then
+                if [[ ${i} == "89dropbear" ]] ; then
                     # Gestion de l'arret de l'accès SSH suivant la version de CentOS
                     # Sur CentOS 7 l'arret se fait automatiquement, on n'execute donc pas le script
                     if [ ${centosRelease} -eq 7 ] ; then
@@ -221,7 +221,7 @@ function InstallDirectory {
                 # On ne copie pas le hash du password root si la connexion par
                 # mot de passe n'est pas autorisée
                 if ! ${allowPassword} ; then
-                    sed -i /'\/etc\/shadow'/d ${DRACUT_MODULE_DIR}/89cryptssh/install
+                    sed -i /'\/etc\/shadow'/d ${DRACUT_MODULE_DIR}/89dropbear/install
                 fi
                 ;;
             # On copie la liste de fichiers/dossiers à installer

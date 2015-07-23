@@ -5,7 +5,7 @@ dracut_install hostname ifconfig ip pkill cut awk touch ping sleep dropbear
 
 # dropbear files
 inst_dir "/etc/dropbear"
-inst /etc/dracut-cryptssh/dropbear_rsa_host_key "/etc/dropbear/dropbear_rsa_host_key"
+inst /etc/dracut-dropbear/dropbear_rsa_host_key "/etc/dropbear/dropbear_rsa_host_key"
 
 # SSH Access files
 inst_dir /root/.ssh
