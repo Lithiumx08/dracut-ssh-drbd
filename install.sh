@@ -2,6 +2,7 @@
 # Fichier de configuration
 . config
 
+# Contient toutes les fonctions utiles à l'installation
 . tools/installTools.sh
 
 ##  ##############  ##############  ##              ##############  ##############

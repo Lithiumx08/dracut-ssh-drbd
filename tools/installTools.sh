@@ -120,8 +120,8 @@ function CheckConfig {
             sed -i $(($myLine+6))i'\\' /etc/sysconfig/iptables
             unset myLine
         fi
+        echo "================================================================================="
     fi
-    echo "================================================================================="
     # On recherche les UUID dans le fichier fstab
     cat /etc/fstab | grep UUID > /dev/null
     if [ $? = 0 ] ; then
@@ -139,8 +139,8 @@ function CheckConfig {
             sed -i /$swapUuid/d /etc/fstab
             echo ${swapline} >> /etc/fstab
         fi
+        echo "================================================================================="
     fi
-    echo "================================================================================="
     # On recherche les partitions DRBD dans le fstab
     cat /etc/fstab | grep drbd > /dev/null
     if [ $? = 1 ] ; then
@@ -165,8 +165,8 @@ function CheckConfig {
                 fi
             done
         fi
+        echo "================================================================================="
     fi
-    echo "================================================================================="
     # On verifie si le breakpoint est créé
     cat /boot/grub/menu.lst | grep 'break=mount' > /dev/null
     if [ $? = 1 ] ; then
@@ -177,8 +177,6 @@ function CheckConfig {
             sed -i "/kernel.*$(uname -r)/ s/$/ rdbreak=mount/" /boot/grub/grub.conf
         fi
     fi
-
-
     echo "================================================================================="
 }
 

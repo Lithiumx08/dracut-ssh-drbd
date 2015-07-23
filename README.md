@@ -24,7 +24,7 @@ Ce module permet de repliquer la partition systeme via drbd toute la replication
 puis on le passe en primaire et on demarre le système au besoin
 Certains problèmes peuvent arriver lors du demarrage car ce ne sera pas les fichiers avec les bons ID matériels (udev)
 Il faudra alors probablement supprimer ces fichiers dans /sysroot en initramfs une fois la partition montée, cela resout 
-généralement le problème (la modificatio est a effectuer dans 90drbd/boot.sh).
+généralement le problème (la modification est a effectuer dans 90drbd/boot.sh).
 
 
 Installation
@@ -40,8 +40,6 @@ Edit config File
 make
 make install
 
-=> Dans /boot/grub/menu.lst on ajoute rdbreak=mount
-
 On redemarre
 On ajoute .install au fichier initramfam.img (3eme ligne)
 On execute /sbin/shrink.sh
@@ -55,13 +53,6 @@ On reboot
 
 Utilisation
 ===========
-
-On ajoute a la ligne de boot de grub :
-rdbreak=mount
-or
-rd.break=mount
-Cela varie suivant la version de dracut en fonction.
-Pour CentOS 6 utilisez la 1ere ligne, pour CentOS 7 la 2eme.
 
 Pour sortir du break vous pouvez utiliser :
 /sbin/boot.sh => permet de passer drbd en primaire puis monte le systeme dans sysroot et sort de l’initramfs
