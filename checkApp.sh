@@ -1,6 +1,7 @@
 #!/bin/bash
 
-NEEDED_COMMANDS="dropbear gcc snmpd"
+# Sans ces packages / cmd l'install ne demarre pas
+NEEDED_COMMANDS="dropbear gcc snmpd sshpass"
 NEEDED_PACKAGES="dracut-network"
 
 error=0
@@ -37,6 +38,7 @@ done
 
 if [[ ${error} > 1 ]] ; then
     echo "Erreurs rencontrees"
+    echo "Si vous savez ce que vous faites vous pouvez editer la liste des commandes requises dans checkApp.sh"
 	exit 1
 fi
 

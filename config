@@ -3,15 +3,21 @@
 # Sur CentOS 6 les modules sont dans /usr/share/
 # Sur CentOS 7 les modules sont dans /usr/lib/
 DRACUT_MODULE_DIR=/usr/share/dracut/modules.d
-DRACUT_PREFIX=/usr/bin/
+
+# Cette valeure est nulle par défaut, mais peut etre modifiée dans le cadre d'une installation manuelle de dracut
+DRACUT_PREFIX=''
+
+# Fichier de configuration de DRBD
+DRBD_CONFIG='/usr/local/drbd/etc/drbd.conf'
 
 # Ajouter les commandes dont vous avez besoin dans le initramfs
 # Les commandes deja ajoutées sont :
 # 88snmp :  snmpd
 # 89cryptSSH : pkill dropbear
-# 90drbd : drbdadm drbdmeta drbdsetup vgchange 
+# 90drbd : drbdadm drbdmeta drbdsetup vgchange fdisk rsync wc
 # Pour les 3 : hostname ifconfig ip cut awk touch ping sleep
-commandsToAdd='df netstat vi fdisk sfdisk rsync ssh sshpass lsblk'
+# Attention le fait de retirer des commandes peut engendrer des problèmes
+commandsToAdd='df netstat vi sfdisk ssh sshpass lsblk'
 
 # Partie reseau requise pour tous les modules
 # Le nom de la carte reseau est indispensable pour charger les drivers dans le initramfs
@@ -26,14 +32,31 @@ devName=eth0
 
 # Config DRBD
 # Commandes requises pour l'installation des metadatas
+# ON TOUCHE AVEC LES YEUX
+# ou au pire on en ajoute
 commandsInstall='resize2fs bc which e2fsck'
+
+### ATTENTION ###
+# Si l'IP est configurée dans le système veuillez laisser cette variable vide
 ipVirtual=''    # Ip virtuelle des 2 serveurs
+
 # master / slave
+# Le role spécifié sera probablement 'master'
+# Si le role spécifié est slave, vous devez bien vous faire chier car la doc n'est pas lue, ou il y a un bug :(
 role=master
+
+# La ressource utilisée dans le cadre de 2 serveurs sera toujours la meme
 RESOURCE=r0
+
+# Partition DRBD sur laquelle est configurée le systeme "/"
 DRBD_ROOT='/dev/drbd0'
+
 # Les disques LVM pour la création des metadatas (resize2fs sur les partitions)
 lvm='/dev/mapper/disk1-root /dev/mapper/disk1-data'
+
+# Les paths sont a adapter suivants la version de python, et l'architecture serveur
+# Si python n'est pas installé, la présence des chemins n'est pas génante
+PYTHON_PATHS='/usr/lib/python2.6 /usr/include/python2.6 /usr/lib64/python2.6'
 
 # Modules a installer
 # Merci de supprimer ceux dont vous n'avez pas besoin
@@ -44,8 +67,10 @@ lvm='/dev/mapper/disk1-root /dev/mapper/disk1-data'
 #
 modToInstall='88snmp 89cryptssh 90drbd 91python'
 
-#
+# Les modules a desintaller
+# Ne rien toucher si vous ne savez pas ce que vous faites
 modToUninstall='88snmp 89cryptssh 90drbd 91python'
+
 # Autoriser l'authentification par mot de passe en SSH
 # dans le initramfs (true/false)
 # Sans mot de passe les clés sont recupérées dans /root/.ssh/authorized_keys (editer dans 89cryptssh/install)

@@ -1,5 +1,7 @@
 // gcc -std=gnu99 -O2 -Wall tiocsti.c -o tiocsti
 
+// Le détail du fonctionnement de ce fichier vous sera expliqué quand je l'aurais moi meme compris ...
+
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>

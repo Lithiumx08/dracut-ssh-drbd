@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Prerequis drbd
-dracut_install drbdadm drbdmeta drbdsetup vgchange sleep touch ping cut awk hostname ifconfig ip
+dracut_install drbdadm drbdmeta drbdsetup vgchange sleep touch ping cut awk hostname ifconfig ip fdisk rsync wc
 inst /usr/local/drbd/etc/drbd.conf
 inst_dir /usr/local/drbd/var/lock/
 inst_dir /usr/local/drbd/var/run/
