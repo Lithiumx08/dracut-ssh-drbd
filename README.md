@@ -33,8 +33,6 @@ Master :
 
 Requires : dracut-network gcc dropbear snmpd sshpass
 
-Eviter d'utiliser python pour le moment son installation est degeulasse
-
 Edit config File
 
 make
@@ -75,6 +73,21 @@ Common Problem
 
 La configuration fait des siennes apres reinstallation :
 Verifier s'il ne reste pas un dossier de module qui serait inutile pour dracut
+
+Fonctionnement interne a dracut
+===============================
+
+On break en mount :
+Sur ce breakpoint, l'important est de monter la racine dans /sysroot
+Si necessaire, il faut modifier /sysroot/dev/root s'il ne s'agit pas de la racine utilisée habituellement
+Il faut aussi editer le fstab au cas où (/sysroot/etc/fstab) meme si je ne suis pas sur que ce soit indispensable
+La partition /home n'est pas montée à ce moment
+Si le /boot est monté, on obtient un crash kernel
+Une fois le necessaire effectué, on peut quitter les breakpoints, il faut donc taper 2 fois "exit" sur la console physique
+
+!!! A noter qu'on peut tout faire depuis ce breakpoint, car on dispose de la commande "mount" et "chroot"
+!!! L'utilisation du reseau necessite cependant le package dracut-network sur centos 6
+
 
 References/Credits
 ==================
