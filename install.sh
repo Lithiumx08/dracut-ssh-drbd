@@ -2,12 +2,6 @@
 # Fichier de configuration
 . config
 
-#. tools/installInitramfs.sh
-
-#. tools/installModulesDir.sh
-
-#. tools/postInstall.sh
-
 . tools/installTools.sh
 
 ##  ##############  ##############  ##              ##############  ##############
@@ -28,10 +22,10 @@ InstallDirectory
 InitramfsNormal
 
 #InstallInitramfs
+# On crée cet initram a la fin car des ajouts spécifiques sont effectués pour ce dernier
 InitramfsInstall
 
 #postInstall
-# Attention si l'IP virtuelle est configurée dans le systeme il faut supprimer cette partie
 if [ ! -z ${ipVirtual} ] ; then
     InstallIpVirtual
 fi
