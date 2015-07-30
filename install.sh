@@ -35,5 +35,13 @@ fi
 # et modification automatisée des erreurs connues
 CheckConfig
 
+
+# On stocke le fichier de configuration de l'installation pour une eventuelle mise a jour
+if [ ! -d /etc/dracut-celeo ] ; then
+    mkdir /etc/dracut-celeo
+fi
+cp -f config /etc/dracut-celeo/config
+
+
 exit 0
 

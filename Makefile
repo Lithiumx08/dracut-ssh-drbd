@@ -23,3 +23,8 @@ clean:
 # Desinstallation des modules
 uninstall:
 	./tools/uninstall.sh
+
+# Mise a jour du DRBD, et des modules deja insallés
+# La mise a jour s'effectue grace au fichier /etc/dracut-celeo/config
+#upgrade: build
+#	./tools/upgrade.sh

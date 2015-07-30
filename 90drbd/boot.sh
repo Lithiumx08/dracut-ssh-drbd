@@ -3,7 +3,7 @@
 #   Script de demarrage de drbd
 #
 #
-. /etc/config
+. /etc/dracut-celeo/config
 
 
 if [[ $1 == "--help" ]] ; then

@@ -9,7 +9,8 @@ inst /etc/init.d/drbd
 inst /etc/hosts
 
 inst /etc/resolv.conf
-inst "$moddir/config" /etc/config
+inst_dir /etc/dracut-celeo
+inst "$moddir/config" /etc/dracut-celeo/config
 inst $moddir/boot.sh /sbin/boot.sh
 inst "$moddir/exitBreakpoint.sh" /sbin/exitBreakpoint.sh
 inst_simple "${moddir}/tiocsti" "/sbin/tiocsti"

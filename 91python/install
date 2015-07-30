@@ -3,4 +3,5 @@
 # On installe les commandes Python
 dracut_install python
 
-
+inst_dir /etc/dracut-celeo
+inst "$moddir/config" /etc/dracut-celeo/config

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /etc/config
+. /etc/dracut-celeo/config
 
 # Si ce script doit tourner sur l'esclave, il faut virer la ligne "primary --force"
 # Merci recherche dans le fichier

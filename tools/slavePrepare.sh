@@ -141,6 +141,9 @@ case ${raidType} in
         done < /${partitionFileName}
 
         postCopy
+
+        echo "Duplication terminée"
+        echo "Vous pouvez redemarrer le serveur"
         ;;
     *)
         echo "Bye !"

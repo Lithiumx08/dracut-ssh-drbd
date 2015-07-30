@@ -10,6 +10,10 @@ inst /etc/init.d/snmpd
 inst /etc/init.d/functions
 inst_dir /var/lock/subsys
 
+# utilities
+inst_dir /etc/dracut-celeo
+inst "$moddir/config" /etc/dracut-celeo/config
+
 # setup hook
 inst_hook pre-mount 90 "$moddir/snmp-load.sh"
 

@@ -188,7 +188,7 @@ function InstallDirectory {
     GetVersion
     local centosRelease=$?
     # Suppression des dossiers precedemment créés
-    for i in ${modToInstall} ; do
+    for i in ${modToUninstall} ; do
         rm -rf ${DRACUT_MODULE_DIR}/${i}
     done
     # On créé le dossier de modules s'il n'existe pas

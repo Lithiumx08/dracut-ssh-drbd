@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /etc/config
+. /etc/dracut-celeo/config
 
 
 # Permet d'exporter les chemins dans la console physique

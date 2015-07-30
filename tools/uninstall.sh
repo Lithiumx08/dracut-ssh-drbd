@@ -1,4 +1,5 @@
 #!/bin/bash
+# Ce script n'est pas prévu pour etre executé de facon autonome
 
 . config
 

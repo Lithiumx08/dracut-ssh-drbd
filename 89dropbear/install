@@ -17,7 +17,8 @@ inst "${moddir}/bash_profile" "/root/.bash_profile"
 
 # Utilities
 inst_simple "${moddir}/tiocsti" "/sbin/tiocsti"
-inst "$moddir/config" /etc/config
+inst_dir /etc/dracut-celeo
+inst "$moddir/config" /etc/dracut-celeo/config
 inst "$moddir/exitBreakpoint.sh" /sbin/exitBreakpoint.sh
 
 # to peek into consoles
