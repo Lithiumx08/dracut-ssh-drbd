@@ -65,33 +65,6 @@ function GetVersion {
 }
 
 #
-# Mise en place du service pour l'IP virtuelle uniquement si l'IP est spécifiée dans la configuration
-# La vérification de l'existence de l'IP dans le fichier de config s'effectue lors de l'installation
-#
-function InstallIpVirtual {
-    # Nom de fichier de service
-    local serviceFile='/etc/init.d/ipVirtual'
-    # Presque inutile, mais on verifie que la variable n'est pas nulle au cas ou
-    # Puis on crée le header du script
-    if [ -n ${serviceFile} ] ; then
-cat > ${serviceFile} <<EOF
-#!/bin/bash
-#
-#
-# chkconfig: - 70 08
-
-EOF
-        # On ajoute la ligne correpondant a la création de l'interface virtuelle
-        echo "ifconfig ${devName}:1 ${ipVirtual} netmask ${netmask}" >> ${serviceFile}
-        # On rend le fichier de service executable
-        chmod +x ${serviceFile}
-        # On active le service au demarrage
-        chkconfig `echo ${serviceFile} | awk -F'/' '{print $4}'` on
-
-    fi
-}
-
-#
 # Verification de la configuration en vigueur sur le serveur et modification automatique au besoin
 # iptables :
 # Ajout des 2 IP pour autoriser la réplication
@@ -201,7 +174,7 @@ function InstallDirectory {
         cp -p ./tiocsti ${DRACUT_MODULE_DIR}/${i}
         echo "dracut_install ${commandsToAdd}" >> ${DRACUT_MODULE_DIR}/${i}/install
         echo "${i} installé"
-        echo "instmods ${devName}" >> ${DRACUT_MODULE_DIR}/${i}/installkernel
+        echo "instmods ${devName_master}" >> ${DRACUT_MODULE_DIR}/${i}/installkernel
     # Specifications d'installation suivant les modules
         case ${i} in
             89dropbear)

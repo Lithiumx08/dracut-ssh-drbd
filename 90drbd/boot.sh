@@ -84,14 +84,6 @@ function IsOtherAnswering {
 ######################################################
 ######################################################
 
-if [[ $role == "master" ]] ; then
-    hostname=$hostname_master
-    ip=${ip_master}
-else
-    hostname=$hostname_slave
-    ip=${ip_slave}
-fi
-
 # On verifie que le 2eme serveur n'est pas en primaire
 IsOtherPrimary
 
@@ -167,22 +159,14 @@ echo "HOSTNAME=${hostname}" >> /sysroot/etc/sysconfig/network
 # Suppression des rules qui font chier
 rm -f /sysroot/etc/udev/rules.d/70-persistent-net.rules
 
-# Suppression de l'UUID dans le fichier de conf reseau
-sed -i /"UUID="/d /sysroot/etc/sysconfig/networking/devices/ifcfg-${devName}
-sed -i /"UUID="/d /sysroot/etc/sysconfig/network-scripts/ifcfg-${devName}
 
-# Modification de la MAC au demarrage
-sed -i /"HWADDR="/d /sysroot/etc/sysconfig/networking/devices/ifcfg-${devName}
-sed -i /"HWADDR="/d /sysroot/etc/sysconfig/network-scripts/ifcfg-${devName}
-hwAddr=`cat /sys/class/net/${devName}/address | awk '{print toupper($1)}'`
-echo "HWADDR=${hwAddr}" >> /sysroot/etc/sysconfig/networking/devices/ifcfg-${devName}
-echo "HWADDR=${hwAddr}" >> /sysroot/etc/sysconfig/network-scripts/ifcfg-${devName}
-
-# Modification de l'IP au demarrage
-sed -i /"IPADDR="/d /sysroot/etc/sysconfig/networking/devices/ifcfg-${devName}
-sed -i /"IPADDR="/d /sysroot/etc/sysconfig/network-scripts/ifcfg-${devName}
-echo "IPADDR=${ip}" >> /sysroot/etc/sysconfig/networking/devices/ifcfg-${devName}
-echo "IPADDR=${ip}" >> /sysroot/etc/sysconfig/network-scripts/ifcfg-${devName}
+#
+#
+#
+#   NETWORK
+#
+#
+#
 
 # Modification du fichier racine dans le system
 /bin/rm -f /dev/root

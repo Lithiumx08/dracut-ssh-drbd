@@ -9,7 +9,6 @@ inst /etc/dracut-dropbear/dropbear_rsa_host_key "/etc/dropbear/dropbear_rsa_host
 
 # SSH Access files
 inst_dir /root/.ssh
-inst_simple /root/.ssh/authorized_keys "/root/.ssh/authorized_keys"
 inst_simple "${moddir}/passwd" "/etc/passwd"
 inst_simple "${moddir}/shells" "/etc/shells"
 inst_simple "/etc/shadow" "/etc/shadow"
@@ -18,7 +17,6 @@ inst "${moddir}/bash_profile" "/root/.bash_profile"
 # Utilities
 inst_simple "${moddir}/tiocsti" "/sbin/tiocsti"
 inst_dir /etc/dracut-celeo
-inst "$moddir/config" /etc/dracut-celeo/config
 inst "$moddir/exitBreakpoint.sh" /sbin/exitBreakpoint.sh
 
 # to peek into consoles

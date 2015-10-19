@@ -11,15 +11,6 @@ TEST=$?
 
 if [ ${TEST} -ne 0 ] ; then
 
-    case ${role} in
-        master)
-            ip=${ip_master}
-            hostname=${hostname_master}
-            ;;
-        slave)
-            ip=${ip_slave}
-            hostname=${hostname_slave}
-            ;;
     esac
 
     # Configuration reseau du serveur

@@ -28,7 +28,8 @@ netmask=255.255.255.0
 gw=192.168.0.1
 hostname_master=mycomputer.mynetwork
 hostname_slave=mycomputer.mynetwork
-devName=eth0
+devName_master=eth0
+devName_slave=eth0
 
 # Config DRBD
 # Commandes requises pour l'installation des metadatas
