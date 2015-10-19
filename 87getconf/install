@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# On execute le script de réplication de la conf dans le répertoire adéquat
+inst_dir /etc/dracut-celeo
+
