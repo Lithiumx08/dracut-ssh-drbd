@@ -41,7 +41,7 @@ function installRecurs () {
             for j in ${content} ; do
                 # Si c'est un fichier on l'ajoute a la liste des fichiers a créer
                 if [ -f ${i}${j} ] ; then 
-                    filesToCopy="${filesToCpy} ${i}${j}"
+                    filesToCopy="${filesToCopy} ${i}${j}"
                 # Si c'est un dossier on l'ajoute a la liste des dossiers a analyser par la suite
                 elif [ -d ${i}${j} ] ; then
                     local funContent="${funContent} ${i}${j}/"
@@ -65,7 +65,7 @@ function installRecurs () {
                 local content=`ls -1 ${i}`
                 for j in ${content} ; do
                     if [ -f ${i}${j} ] ; then 
-                        filesToCopy="${filesToCpy} ${i}${j}"
+                        filesToCopy="${filesToCopy} ${i}${j}"
                     elif [ -d ${i}${j} ] ; then
                         local funContent="${funContent} ${i}${j}/"
     #                    echo "${i}${j} est un dossier"
@@ -95,7 +95,7 @@ for i in ${dirToCreate} ; do
     echo "inst_dir ${i}" >> .pythonFiles
 done
 
-for i in ${filesToCpy} ; do
+for i in ${filesToCopy} ; do
     echo "inst_simple ${i} ${i}" >> .pythonFiles
 done
 
