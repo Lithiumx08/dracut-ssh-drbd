@@ -46,7 +46,7 @@ function postCopy {
     echo "================================================================================="
     echo "Generation du nouveau grub"
     echo "================================================================================="
-    /sbin/grub --batch <<EOT 1>/dev/null 2>/dev/null
+    grub --batch <<EOT 1>/dev/null 2>/dev/null
 root ${bootFirstLine}
 setup ${bootSecondLine}
 quit

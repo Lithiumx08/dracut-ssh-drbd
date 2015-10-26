@@ -60,6 +60,8 @@ function GetVersion {
         version=7
     elif cat /etc/centos-release | grep -o "6.6" > /dev/null ; then
         version=6
+    elif cat /etc/centos-release | grep -o "6.7" > /dev/null ; then
+        version=6
     fi
     return ${version}
 }
